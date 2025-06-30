@@ -1,6 +1,6 @@
 {
     "name": "@teachoco-dev/cli",
-    "version": "0.0.3-beta",
+    "version": "0.0.4",
     "type": "commonjs",
     "description": "javascript npm library create by teachoco-official",
     "main": "dist/index.js",
@@ -9,20 +9,21 @@
         "dist"
     ],
     "bin": {
-        "tcc": "./dist/index.js"
+        "tcc": "./dist/command.js"
     },
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org/"
     },
     "scripts": {
-        "tcc": "tsx src/index.ts",
-        "start": "node dist/index.js",
+        "test": "tsx src/test.ts",
+        "tcc": "tsx src/command.ts",
+        "start": "node dist/command.js",
         "prepare": "npm run build",
         "build": "rm -rf ./dist & rollup -c",
         "dev": "rm -rf ./dist && rollup -c -w",
-        "public": "npm publish --scope=@teachoco-dev --access=public --tag beta",
-        "publicforce": "npm publish --scope=@teachoco-dev --access=public --tag beta --force"
+        "public": "npm publish --scope=@teachoco-dev --access=public",
+        "publicforce": "npm publish --scope=@teachoco-dev --access=public --force"
     },
     "keywords": [
         "cli",
@@ -46,6 +47,7 @@
         "@rollup/plugin-typescript": "^12.1.2",
         "chokidar": "^4.0.3",
         "commander": "^13.1.0",
+        "dayjs": "^1.11.13",
         "fs-extra": "^11.3.0",
         "gulp": "^5.0.1",
         "gulp-chmod": "^4.0.0",

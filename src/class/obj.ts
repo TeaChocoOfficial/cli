@@ -1,5 +1,5 @@
 //-Path: "cli/src/function/obj.ts"
-export class Obj {
+export abstract class Obj {
     static keys<Value extends object>(value: Value): (keyof Value)[] {
         return Object.keys(value) as (keyof Value)[];
     }
