@@ -1,0 +1,67 @@
+{
+    "name": "@teachoco-dev/cli",
+    "version": "0.0.1-beta",
+    "type": "commonjs",
+    "description": "javascript npm library create by teachoco-official",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "bin": {
+        "tcc": "./dist/index.js"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org/"
+    },
+    "scripts": {
+        "tcc": "tsx src/index.ts",
+        "start": "node dist/index.js",
+        "prepare": "npm run build",
+        "build": "rm -rf ./dist & rollup -c",
+        "dev": "rm -rf ./dist && rollup -c -w",
+        "public": "npm publish --scope=@teachoco-official --access=public --tag beta",
+        "publicforce": "npm publish --scope=@teachoco-official --access=public --tag beta --force"
+    },
+    "keywords": [
+        "cli",
+        "generator",
+        "structure"
+    ],
+    "author": "teachoco-official",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/TeaChocoOfficial"
+    },
+    "peerDependencies": {
+        "chokidar": "^4.0.3",
+        "commander": "^13.1.0",
+        "fs-extra": "^11.3.0"
+    },
+    "dependencies": {
+        "@rollup/plugin-commonjs": "^28.0.2",
+        "@rollup/plugin-node-resolve": "^16.0.0",
+        "@rollup/plugin-typescript": "^12.1.2",
+        "chokidar": "^4.0.3",
+        "commander": "^13.1.0",
+        "fs-extra": "^11.3.0",
+        "gulp": "^5.0.1",
+        "gulp-chmod": "^4.0.0",
+        "gulp-insert": "^0.5.0",
+        "js-yaml": "^4.1.0",
+        "recoil": "^0.7.7",
+        "rollup": "^4.29.1",
+        "rollup-plugin-peer-deps-external": "^2.2.4",
+        "tslib": "^2.8.1",
+        "tsx": "^4.19.3"
+    },
+    "devDependencies": {
+        "@types/fs-extra": "^11.0.4",
+        "@types/js-yaml": "^4.0.9",
+        "@types/node": "^22.13.10",
+        "tslib": "^2.8.1",
+        "typescript": "^5.7.2"
+    }
+}

@@ -1,0 +1,11 @@
+import React, { useEffect, useState } from "react"
+
+export default function Report() {
+    const [count, setCount] = useState(0)
+
+    useEffect(() => {
+        setCount(count + 1)
+    }, []);
+
+    return <div></div>
+}
