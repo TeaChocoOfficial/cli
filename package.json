@@ -1,6 +1,6 @@
 {
     "name": "@teachoco-dev/cli",
-    "version": "0.0.1-beta",
+    "version": "0.0.3-beta",
     "type": "commonjs",
     "description": "javascript npm library create by teachoco-official",
     "main": "dist/index.js",
@@ -21,8 +21,8 @@
         "prepare": "npm run build",
         "build": "rm -rf ./dist & rollup -c",
         "dev": "rm -rf ./dist && rollup -c -w",
-        "public": "npm publish --scope=@teachoco-official --access=public --tag beta",
-        "publicforce": "npm publish --scope=@teachoco-official --access=public --tag beta --force"
+        "public": "npm publish --scope=@teachoco-dev --access=public --tag beta",
+        "publicforce": "npm publish --scope=@teachoco-dev --access=public --tag beta --force"
     },
     "keywords": [
         "cli",
@@ -33,7 +33,7 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/TeaChocoOfficial"
+        "url": "git+https://github.com/TeaChocoOfficial/cli.git"
     },
     "peerDependencies": {
         "chokidar": "^4.0.3",
