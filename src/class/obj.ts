@@ -1,4 +1,4 @@
-//-Path: "cli/src/function/obj.ts"
+//-Path: "cli/src/class/obj.ts"
 export abstract class Obj {
     static keys<Value extends object>(value: Value): (keyof Value)[] {
         return Object.keys(value) as (keyof Value)[];
@@ -9,7 +9,7 @@ export abstract class Obj {
     static isObject(obj: any): obj is object {
         return obj !== null && typeof obj === "object" && !Array.isArray(obj);
     }
-    static reduce<InitialValue, Object extends object = object>(
+    static reduce<Object extends object = object, InitialValue = Object>(
         obj: Object,
         callbackfn: (
             previousValue: InitialValue,
@@ -32,6 +32,34 @@ export abstract class Obj {
                 );
             },
             initialValue,
+        );
+    }
+    static amend<
+        Object extends object = object,
+        NewObject extends object = Object,
+    >(
+        obj: Object,
+        callbackfn: (
+            currentKey: keyof Object,
+            currentValue: Object[keyof Object],
+            currentIndex: number,
+            array: (keyof Object)[],
+        ) => NewObject[keyof NewObject],
+    ) {
+        return this.reduce<Object, Object>(
+            obj,
+            (previousValue, currentKey, currentValue, currentIndex, array) => {
+                const newValue = callbackfn(
+                    currentKey,
+                    currentValue,
+                    currentIndex,
+                    array,
+                );
+                previousValue[currentKey] =
+                    newValue as unknown as Object[keyof Object];
+                return previousValue;
+            },
+            obj,
         );
     }
     static map<Value, Object extends object = object>(
@@ -106,5 +134,18 @@ export abstract class Obj {
         key: keyof Object,
     ): key is keyof Object {
         return Object.prototype.hasOwnProperty.call(obj, key);
+    }
+    static every<Object extends object>(
+        object: Object,
+        method: (
+            value: Object[keyof Object],
+            key: keyof Object,
+            index: number,
+            array: (keyof Object)[],
+        ) => boolean,
+    ): boolean {
+        return this.keys(object).every((key, index, array) =>
+            method(object[key], key, index, array),
+        );
     }
 }

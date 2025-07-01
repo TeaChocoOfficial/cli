@@ -1,5 +1,8 @@
 //-Path: "cli/src/class/ary.ts"
 export abstract class Ary {
+    static is(ary: unknown): ary is any[] {
+        return Array.isArray(ary);
+    }
     static first<Value>(ary: Value[]): Value {
         return ary[0];
     }
