@@ -21,8 +21,8 @@
         "prepare": "pnpm run build",
         "build": "rimraf ./dist && rollup -c",
         "dev": "rimraf ./dist && rollup -c -w",
-        "public": "pnpm publish --scope=@teachoco-dev --access=public",
-        "publicforce": "pnpm publish --scope=@teachoco-dev --access=public --force"
+        "public": "pnpm publish --access=public --no-git-checks",
+        "publicforce": "pnpm publish --access=public --force --no-git-checks"
     },
     "keywords": [
         "cli",
