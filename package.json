@@ -1,6 +1,6 @@
 {
     "name": "@teachoco-dev/cli",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "type": "commonjs",
     "description": "javascript npm library create by teachoco-official",
     "main": "dist/index.js",
