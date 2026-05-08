@@ -1,0 +1,1877 @@
+$schema: >-
+  https://raw.githubusercontent.com/TeaChocoOfficial/cli/main/structure.schema.json
+workspaces:
+  - name: my-workspace
+    run: npm start
+    pack: {}
+    src:
+      - name: public
+        type: folder
+        children: []
+      - name: src
+        type: folder
+        children:
+          - name: class
+            type: folder
+            children:
+              - name: ary
+                type: ts
+                code:
+                  - "//-Path: \"cli/src/class/ary.ts\"\r"
+                  - "/**\r"
+                  - " * Utility class for array operations\r"
+                  - " */\r"
+                  - "export abstract class Ary {\r"
+                  - "    /**\r"
+                  - "     * Check if value is an array\r"
+                  - "     * @param ary - Value to check\r"
+                  - "     * @returns True if value is an array\r"
+                  - "     */\r"
+                  - "    static is(ary: unknown): ary is any[] {\r"
+                  - "        return Array.isArray(ary);\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Get first element of array\r"
+                  - "     * @param ary - Array to get first element from\r"
+                  - "     * @returns First element\r"
+                  - "     */\r"
+                  - "    static first<Value>(ary: Value[]): Value {\r"
+                  - "        return ary[0];\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Get last element of array\r"
+                  - "     * @param ary - Array to get last element from\r"
+                  - "     * @returns Last element\r"
+                  - "     */\r"
+                  - "    static last<Value>(ary: Value[]): Value {\r"
+                  - "        return ary[ary.length - 1];\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Get random element from array\r"
+                  - "     * @param array - Array to get random element from\r"
+                  - "     * @returns Random element\r"
+                  - "     */\r"
+                  - "    static random<Value>(array: Value[]): Value {\r"
+                  - "        return array.length > 0\r"
+                  - "            ? array[Math.floor(Math.random() * array.length)]\r"
+                  - "            : array[0];\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Shuffle array randomly\r"
+                  - "     * @param array - Array to shuffle\r"
+                  - "     * @returns Shuffled array\r"
+                  - "     */\r"
+                  - "    static shuffle<Value>(array: Value[]): Value[] {\r"
+                  - "        if (array?.length > 1) array.sort(() => Math.random() - 0.5);\r"
+                  - "        return array;\r"
+                  - "    }\r"
+                  - "}\r"
+                  - ''
+              - name: num
+                type: ts
+                code:
+                  - "//-Path: \"cli/src/class/num.ts\"\r"
+                  - "/**\r"
+                  - " * Utility class for number operations\r"
+                  - " */\r"
+                  - "export abstract class Num {\r"
+                  - "    /**\r"
+                  - "     * Format number with thousand separators\r"
+                  - "     * @param number - Number to format\r"
+                  - "     * @returns Formatted number string\r"
+                  - "     */\r"
+                  - "    static format(number: number): string {\r"
+                  - "        return number.toString().replace(/(\\d)(?=(\\d{3})+(?!\\d))/g, \"$1,\");\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Format number with suffix (k, m, g, t, p, e, z, y)\r"
+                  - "     * @param num - Number to format\r"
+                  - "     * @param decimal - Number of decimal places\r"
+                  - "     * @returns Formatted number with suffix\r"
+                  - "     */\r"
+                  - "    static count(num: number, decimal: number = 2): string {\r"
+                  - "        const suffixes = [\"\", \"k\", \"m\", \"g\", \"t\", \"p\", \"e\", \"z\", \"y\"];\r"
+                  - "        let i = 0;\r"
+                  - "\r"
+                  - "        while (num >= 1000 && i < suffixes.length - 1) {\r"
+                  - "            num /= 1000;\r"
+                  - "            i++;\r"
+                  - "        }\r"
+                  - "        const formattedNum = this.rounding(num, decimal).toString();\r"
+                  - "\r"
+                  - "        if (!formattedNum.includes(\".\")) {\r"
+                  - "            return `${formattedNum}${suffixes[i]}`;\r"
+                  - "        }\r"
+                  - "\r"
+                  - "        const [integerPart, decimalPart] = formattedNum.split(\".\");\r"
+                  - "        if (!decimalPart.replace(/0/g, \"\")) {\r"
+                  - "            return `${integerPart}${suffixes[i]}`;\r"
+                  - "        }\r"
+                  - "\r"
+                  - "        return `${formattedNum}${suffixes[i]}`;\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Round number to specified decimal places\r"
+                  - "     * @param num - Number to round\r"
+                  - "     * @param decimal - Number of decimal places\r"
+                  - "     * @returns Rounded number\r"
+                  - "     */\r"
+                  - "    static rounding(num: number, decimal: number = 2): number {\r"
+                  - "        const [integerPart, decimalPart] = String(num).split(\".\");\r"
+                  - "        if (decimalPart) {\r"
+                  - "            const fixedNumber = parseFloat(\r"
+                  - "                integerPart + \".\" + decimalPart.substring(0, decimal),\r"
+                  - "            );\r"
+                  - "            return fixedNumber;\r"
+                  - "        } else if (integerPart) {\r"
+                  - "            return parseFloat(integerPart);\r"
+                  - "        } else {\r"
+                  - "            return num;\r"
+                  - "        }\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Add leading zeros to number\r"
+                  - "     * @param num - Number to format\r"
+                  - "     * @param index - Number of digits\r"
+                  - "     * @returns Number string with leading zeros\r"
+                  - "     */\r"
+                  - "    static zeroNumber(num: number, index: number = 1): string {\r"
+                  - "        return (num < 10 ** index ? \"0\" + num : num).toString();\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Round number to 2 decimal places\r"
+                  - "     * @param num - Number to fix\r"
+                  - "     * @returns Number rounded to 2 decimal places\r"
+                  - "     */\r"
+                  - "    static fixed(num: number): number {\r"
+                  - "        return Math.round(num * 100) / 100;\r"
+                  - "    }\r"
+                  - "}\r"
+                  - ''
+              - name: obj
+                type: ts
+                code:
+                  - "//-Path: \"cli/src/class/obj.ts\"\r"
+                  - "/**\r"
+                  - " * Utility class for object operations\r"
+                  - " */\r"
+                  - "export abstract class Obj {\r"
+                  - "    /**\r"
+                  - "     * Get object keys\r"
+                  - "     * @param value - Object to get keys from\r"
+                  - "     * @returns Array of keys\r"
+                  - "     */\r"
+                  - "    static keys<Value extends object>(value: Value): (keyof Value)[] {\r"
+                  - "        return Object.keys(value) as (keyof Value)[];\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Get object values\r"
+                  - "     * @param object - Object to get values from\r"
+                  - "     * @returns Array of values\r"
+                  - "     */\r"
+                  - "    static values<Value extends object>(object: Value): Value[keyof Value][] {\r"
+                  - "        return Object.values(object) as Value[keyof Value][];\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Check if value is an object\r"
+                  - "     * @param obj - Value to check\r"
+                  - "     * @returns True if value is an object\r"
+                  - "     */\r"
+                  - "    static isObject(obj: any): obj is object {\r"
+                  - "        return obj !== null && typeof obj === \"object\" && !Array.isArray(obj);\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Reduce object to a single value\r"
+                  - "     * @param obj - Object to reduce\r"
+                  - "     * @param callbackfn - Callback function for reduction\r"
+                  - "     * @param initialValue - Initial value for reduction\r"
+                  - "     * @returns Reduced value\r"
+                  - "     */\r"
+                  - "    static reduce<Object extends object = object, InitialValue = Object>(\r"
+                  - "        obj: Object,\r"
+                  - "        callbackfn: (\r"
+                  - "            previousValue: InitialValue,\r"
+                  - "            currentKey: keyof Object,\r"
+                  - "            currentValue: Object[keyof Object],\r"
+                  - "            currentIndex: number,\r"
+                  - "            array: (keyof Object)[],\r"
+                  - "        ) => InitialValue,\r"
+                  - "        initialValue: InitialValue,\r"
+                  - "    ) {\r"
+                  - "        return this.keys(obj).reduce(\r"
+                  - "            (previousValue, currentKey, currentIndex, array) => {\r"
+                  - "                const currentValue = obj[currentKey];\r"
+                  - "                return callbackfn(\r"
+                  - "                    previousValue,\r"
+                  - "                    currentKey,\r"
+                  - "                    currentValue,\r"
+                  - "                    currentIndex,\r"
+                  - "                    array,\r"
+                  - "                );\r"
+                  - "            },\r"
+                  - "            initialValue,\r"
+                  - "        );\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Amend object by transforming values\r"
+                  - "     * @param obj - Object to amend\r"
+                  - "     * @param callbackfn - Callback function to transform values\r"
+                  - "     * @returns Amended object\r"
+                  - "     */\r"
+                  - "    static amend<\r"
+                  - "        Object extends object = object,\r"
+                  - "        NewObject extends object = Object,\r"
+                  - "    >(\r"
+                  - "        obj: Object,\r"
+                  - "        callbackfn: (\r"
+                  - "            currentKey: keyof Object,\r"
+                  - "            currentValue: Object[keyof Object],\r"
+                  - "            currentIndex: number,\r"
+                  - "            array: (keyof Object)[],\r"
+                  - "        ) => NewObject[keyof NewObject],\r"
+                  - "    ): NewObject {\r"
+                  - "        return this.reduce<Object, NewObject>(\r"
+                  - "            obj,\r"
+                  - "            (previousValue, currentKey, currentValue, currentIndex, array) => {\r"
+                  - "                const newValue = callbackfn(\r"
+                  - "                    currentKey,\r"
+                  - "                    currentValue,\r"
+                  - "                    currentIndex,\r"
+                  - "                    array,\r"
+                  - "                );\r"
+                  - "                (previousValue as unknown as Object)[currentKey] =\r"
+                  - "                    newValue as unknown as Object[keyof Object];\r"
+                  - "                return previousValue;\r"
+                  - "            },\r"
+                  - "            obj as unknown as NewObject,\r"
+                  - "        );\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Map object values to new array\r"
+                  - "     * @param obj - Object to map\r"
+                  - "     * @param callbackfn - Callback function to transform values\r"
+                  - "     * @returns Mapped array\r"
+                  - "     */\r"
+                  - "    static map<Value, Object extends object = object>(\r"
+                  - "        obj: Object,\r"
+                  - "        callbackfn: (\r"
+                  - "            value: Object[keyof Object],\r"
+                  - "            key: keyof Object,\r"
+                  - "            index: number,\r"
+                  - "            array: (keyof Object)[],\r"
+                  - "        ) => Value,\r"
+                  - "    ): Value[] {\r"
+                  - "        return this.keys(obj).map((key, index, array) => {\r"
+                  - "            const value = obj[key];\r"
+                  - "            return callbackfn(value, key, index, array);\r"
+                  - "        }, []);\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Check if value is a plain object\r"
+                  - "     * @param obj - Value to check\r"
+                  - "     * @returns True if value is a plain object\r"
+                  - "     */\r"
+                  - "    static isPlainObject(obj: any): obj is object {\r"
+                  - "        if (!this.isObject(obj)) return false;\r"
+                  - "        const proto = Object.getPrototypeOf(obj);\r"
+                  - "        return proto === Object.prototype || proto === null;\r"
+                  - "    }\r"
+                  - "\r"
+                  - "    /**\r"
+                  - "     * Check if value is a class instance\r"
+                  - "     * @param obj - Value to check\r"
+                  - "     * @returns True if value is a class instance\r"
+                  - "     */\r"
+                  - "    static isClassInstance(obj: any): obj is object {\r"
+                  - "        if (!this.isObject(obj)) return false;\r"
+                  - "        const proto = Object.getPrototypeOf(obj);\r"
+                  - "        return (\r"
+                  - "            proto !== Object.prototype &&\r"
+                  - "            proto !== null &&\r"
+                  - "            proto.constructor !== Object\r"
+                  - "        );\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Get object entries as key-value pairs\r"
+                  - "     * @param value - Object to get entries from\r"
+                  - "     * @returns Array of key-value pairs\r"
+                  - "     */\r"
+                  - "    static entries<Value extends object>(\r"
+                  - "        value: Value,\r"
+                  - "    ): { [K in keyof Value]: [K, Value[K]] }[keyof Value][] {\r"
+                  - "        return Object.entries(value) as {\r"
+                  - "            [K in keyof Value]: [K, Value[K]];\r"
+                  - "        }[keyof Value][];\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Omit specified keys from object\r"
+                  - "     * @param value - Object to omit keys from\r"
+                  - "     * @param keys - Keys to omit\r"
+                  - "     * @returns Object with omitted keys\r"
+                  - "     */\r"
+                  - "    static omit<Value extends object, Key extends keyof Value>(\r"
+                  - "        value: Value,\r"
+                  - "        ...keys: Key[]\r"
+                  - "    ): Omit<Value, Key> {\r"
+                  - "        const result = { ...value };\r"
+                  - "        keys.forEach((key) => {\r"
+                  - "            delete result[key];\r"
+                  - "        });\r"
+                  - "        return result as Omit<Value, Key>;\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Deep merge multiple objects\r"
+                  - "     * @param objects - Objects to merge\r"
+                  - "     * @returns Merged object\r"
+                  - "     */\r"
+                  - "    static mix<MixObject extends object>(...objects: object[]): MixObject {\r"
+                  - "        return objects.reduce(\r"
+                  - "            (result: Record<string, any>, current: Record<string, any>) => {\r"
+                  - "                if (!this.isPlainObject(current)) return result;\r"
+                  - "                this.keys(current).forEach((key: string) => {\r"
+                  - "                    const resultValue = result[key];\r"
+                  - "                    const currentValue = current[key];\r"
+                  - "                    if (\r"
+                  - "                        this.isPlainObject(resultValue) &&\r"
+                  - "                        this.isPlainObject(currentValue)\r"
+                  - "                    ) {\r"
+                  - "                        result[key] = this.mix(resultValue, currentValue);\r"
+                  - "                    } else if (currentValue !== undefined) {\r"
+                  - "                        result[key] = currentValue;\r"
+                  - "                    }\r"
+                  - "                });\r"
+                  - "                return result;\r"
+                  - "            },\r"
+                  - "            {} as MixObject,\r"
+                  - "        ) as MixObject;\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Check if object has own property\r"
+                  - "     * @param obj - Object to check\r"
+                  - "     * @param key - Key to check\r"
+                  - "     * @returns True if object has own property\r"
+                  - "     */\r"
+                  - "    static hasOwn<Object extends object>(\r"
+                  - "        obj: Object,\r"
+                  - "        key: keyof Object,\r"
+                  - "    ): key is keyof Object {\r"
+                  - "        return Object.prototype.hasOwnProperty.call(obj, key);\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Check if all object values pass test\r"
+                  - "     * @param object - Object to test\r"
+                  - "     * @param method - Test function\r"
+                  - "     * @returns True if all values pass test\r"
+                  - "     */\r"
+                  - "    static every<Object extends object>(\r"
+                  - "        object: Object,\r"
+                  - "        method: (\r"
+                  - "            value: Object[keyof Object],\r"
+                  - "            key: keyof Object,\r"
+                  - "            index: number,\r"
+                  - "            array: (keyof Object)[],\r"
+                  - "        ) => boolean,\r"
+                  - "    ): boolean {\r"
+                  - "        return this.keys(object).every((key, index, array) =>\r"
+                  - "            method(object[key], key, index, array),\r"
+                  - "        );\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Filter object by values\r"
+                  - "     * @param object - Object to filter\r"
+                  - "     * @param method - Filter function\r"
+                  - "     * @returns Filtered object\r"
+                  - "     */\r"
+                  - "    static filter<Object extends object, NewObject extends object = Object>(\r"
+                  - "        object: Object,\r"
+                  - "        method: (\r"
+                  - "            value: Object[keyof Object],\r"
+                  - "            key: keyof Object,\r"
+                  - "            index: number,\r"
+                  - "            array: (keyof Object)[],\r"
+                  - "        ) => boolean,\r"
+                  - "    ): NewObject {\r"
+                  - "        return this.keys(object)\r"
+                  - "            .filter((key, index, array) =>\r"
+                  - "                method(object[key], key, index, array),\r"
+                  - "            )\r"
+                  - "            .reduce((result, key) => {\r"
+                  - "                (result as Object)[key] = object[key];\r"
+                  - "                return result;\r"
+                  - "            }, {}) as NewObject;\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Get number of keys in object\r"
+                  - "     * @param object - Object to count\r"
+                  - "     * @returns Number of keys\r"
+                  - "     */\r"
+                  - "    static leng(object: object) {\r"
+                  - "        return this.keys(object).length;\r"
+                  - "    }\r"
+                  - "}\r"
+                  - ''
+              - name: ReactHook
+                type: tsx
+                code:
+                  - "//-Path: \"cli/src/class/ReactHook.tsx\"\r"
+                  - "import { useEffect, DependencyList, useState } from \"react\";\r"
+                  - "\r"
+                  - "export class ReactHook {\r"
+                  - "    static EventListener<K extends keyof DocumentEventMap>(\r"
+                  - "        type: K,\r"
+                  - "        listener: (this: Document, event: DocumentEventMap[K]) => any,\r"
+                  - "        options?: boolean | AddEventListenerOptions,\r"
+                  - "        deps: DependencyList = [],\r"
+                  - "    ) {\r"
+                  - "        useEffect(() => {\r"
+                  - "            document.addEventListener(type, listener, options);\r"
+                  - "            return () => document.removeEventListener(type, listener, options);\r"
+                  - "        }, deps);\r"
+                  - "    }\r"
+                  - "    static MousePositionTracker(deps: DependencyList = []) {\r"
+                  - "        const [mousePosition, setMousePosition] = useState<\r"
+                  - "            { x?: number; y?: number } | undefined\r"
+                  - "        >();\r"
+                  - "\r"
+                  - "        useEffect(() => {\r"
+                  - "            const updateMousePosition = (event: MouseEvent) =>\r"
+                  - "                setMousePosition({ x: event.clientX, y: event.clientY });\r"
+                  - "\r"
+                  - "            window.addEventListener(\"mousemove\", updateMousePosition);\r"
+                  - "            return () =>\r"
+                  - "                window.removeEventListener(\"mousemove\", updateMousePosition);\r"
+                  - "        }, deps);\r"
+                  - "\r"
+                  - "        return mousePosition;\r"
+                  - "    }\r"
+                  - "    useProEffect(\r"
+                  - "        effect: () => Promise<void>,\r"
+                  - "        deps: React.DependencyList = [],\r"
+                  - "        callback: () => void = () => {},\r"
+                  - "    ) {\r"
+                  - "        useEffect(() => {\r"
+                  - "            effect();\r"
+                  - "            return callback();\r"
+                  - "        }, deps);\r"
+                  - "    }\r"
+                  - "}\r"
+                  - ''
+              - name: storage
+                type: ts
+                code:
+                  - "//-Path: \"cli/src/class/storage.ts\"\r"
+                  - "\r"
+                  - "/**\r"
+                  - " * Get data from localStorage\r"
+                  - " * @param key - Storage key\r"
+                  - " * @returns Stored data or undefined\r"
+                  - " */\r"
+                  - "export function getStorage<Data = string>(key: string): Data | undefined {\r"
+                  - "    if (localStorage?.getItem !== undefined) {\r"
+                  - "        const data = localStorage.getItem(key) as Data;\r"
+                  - "        if (data === null) {\r"
+                  - "            return undefined;\r"
+                  - "        } else {\r"
+                  - "            try {\r"
+                  - "                return JSON.parse(localStorage.getItem(key) as string) as Data;\r"
+                  - "            } catch (_) {\r"
+                  - "                return localStorage.getItem(key) as Data;\r"
+                  - "            }\r"
+                  - "        }\r"
+                  - "    }\r"
+                  - "}\r"
+                  - "\r"
+                  - "/**\r"
+                  - " * Set data to localStorage\r"
+                  - " * @param key - Storage key\r"
+                  - " * @param value - Value to store\r"
+                  - " */\r"
+                  - "export function setStorage<Data = string | undefined>(\r"
+                  - "    key: string,\r"
+                  - "    value: Data,\r"
+                  - ") {\r"
+                  - "    if (localStorage?.setItem !== undefined) {\r"
+                  - "        localStorage.setItem(\r"
+                  - "            key,\r"
+                  - "            typeof value === \"string\" ? value : JSON.stringify(value),\r"
+                  - "        );\r"
+                  - "    }\r"
+                  - "}\r"
+                  - "\r"
+                  - "/**\r"
+                  - " * Get boolean setting from localStorage\r"
+                  - " * @param key - Setting key\r"
+                  - " * @param defaultValue - Default value if not set\r"
+                  - " * @returns Setting value or default\r"
+                  - " */\r"
+                  - "export function getSetting<Data = boolean | undefined>(\r"
+                  - "    key: string,\r"
+                  - "    defaultValue: Data = undefined as Data,\r"
+                  - ") {\r"
+                  - "    if (localStorage?.getItem !== undefined) {\r"
+                  - "        const data = localStorage.getItem(`setting ${key}`);\r"
+                  - "        if (data === \"true\") {\r"
+                  - "            return true as Data;\r"
+                  - "        } else if (data === \"false\") {\r"
+                  - "            return false as Data;\r"
+                  - "        } else if (data === null) {\r"
+                  - "            if (defaultValue !== undefined) {\r"
+                  - "                setSetting(key, defaultValue);\r"
+                  - "            }\r"
+                  - "            return defaultValue;\r"
+                  - "        } else {\r"
+                  - "            return data as Data;\r"
+                  - "        }\r"
+                  - "    }\r"
+                  - "}\r"
+                  - "\r"
+                  - "/**\r"
+                  - " * Set boolean setting to localStorage\r"
+                  - " * @param key - Setting key\r"
+                  - " * @param value - Value to store\r"
+                  - " */\r"
+                  - "export function setSetting<Data = boolean | undefined>(\r"
+                  - "    key: string,\r"
+                  - "    value: Data,\r"
+                  - ") {\r"
+                  - "    if (localStorage?.setItem !== undefined) {\r"
+                  - "        localStorage.setItem(\r"
+                  - "            `setting ${key}`,\r"
+                  - "            typeof value === \"boolean\"\r"
+                  - "                ? value === true\r"
+                  - "                    ? \"true\"\r"
+                  - "                    : \"false\"\r"
+                  - "                : typeof value === \"string\"\r"
+                  - "                ? value\r"
+                  - "                : JSON.stringify(value),\r"
+                  - "        );\r"
+                  - "    }\r"
+                  - "}\r"
+                  - ''
+              - name: str
+                type: ts
+                code:
+                  - "//-Path: \"cli/src/class/str.ts\"\r"
+                  - "\r"
+                  - "/**\r"
+                  - " * Utility class for string operations\r"
+                  - " */\r"
+                  - "export abstract class Str {\r"
+                  - "    /**\r"
+                  - "     * Truncate text to maximum length\r"
+                  - "     * @param text - Text to truncate\r"
+                  - "     * @param max - Maximum length\r"
+                  - "     * @returns Truncated text with ellipsis or original text\r"
+                  - "     */\r"
+                  - "    static max(text?: string | number, max: number = 20): string | undefined {\r"
+                  - "        if (typeof text == \"string\") {\r"
+                  - "            const Text = text.toString();\r"
+                  - "            return Text.length > max ? Text.substring(0, max) + \"...\" : Text;\r"
+                  - "        }\r"
+                  - "    }\r"
+                  - "}\r"
+                  - ''
+              - name: time
+                type: ts
+                code:
+                  - "//-Path: \"cli/src/class/time.ts\"\r"
+                  - "import dayjs from \"dayjs\";\r"
+                  - "\r"
+                  - "/**\r"
+                  - " * Utility class for time operations\r"
+                  - " */\r"
+                  - "export abstract class Time {\r"
+                  - "    /**\r"
+                  - "     * Get time difference as human-readable string\r"
+                  - "     * @param timestamp - Timestamp to compare (defaults to now)\r"
+                  - "     * @returns Time difference string\r"
+                  - "     */\r"
+                  - "    static left(timestamp?: number): string {\r"
+                  - "        const now = new Date().getTime();\r"
+                  - "        const timeDifference = now - (timestamp ?? new Date().getTime());\r"
+                  - "\r"
+                  - "        const seconds = Math.floor(timeDifference / 1000);\r"
+                  - "        const minutes = Math.floor(seconds / 60);\r"
+                  - "        const hours = Math.floor(minutes / 60);\r"
+                  - "        const days = Math.floor(hours / 24);\r"
+                  - "\r"
+                  - "        if (days > 30) {\r"
+                  - "            return \"morethen\";\r"
+                  - "        } else if (days > 0) {\r"
+                  - "            return `${days} days`;\r"
+                  - "        } else if (hours > 0) {\r"
+                  - "            return `${hours} hours`;\r"
+                  - "        } else if (minutes > 0) {\r"
+                  - "            return `${minutes} minutes`;\r"
+                  - "        } else if (seconds > 0) {\r"
+                  - "            return `${seconds} seconds`;\r"
+                  - "        }\r"
+                  - "        return \"\";\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Format timestamp to date string\r"
+                  - "     * @param timestamp - Timestamp to format (defaults to now)\r"
+                  - "     * @returns Formatted date string\r"
+                  - "     */\r"
+                  - "    static date(timestamp?: number): string {\r"
+                  - "        let date = new Date();\r"
+                  - "        if (timestamp) date = new Date(timestamp);\r"
+                  - "        return dayjs(date).format(\"HH:mm:ss DD/MM/YYYY\");\r"
+                  - "    }\r"
+                  - "    /**\r"
+                  - "     * Check if timestamp is in the past or now\r"
+                  - "     * @param timestamp - Timestamp to check (defaults to now)\r"
+                  - "     * @returns True if timestamp is in the past or now\r"
+                  - "     */\r"
+                  - "    static afterDate(timestamp?: number): boolean {\r"
+                  - "        let date = new Date().getTime();\r"
+                  - "        if (timestamp) date = new Date(timestamp).getTime();\r"
+                  - "        return date <= new Date().getTime();\r"
+                  - "    }\r"
+                  - "}\r"
+                  - ''
+          - name: command
+            type: folder
+            children:
+              - name: command
+                type: ts
+                code:
+                  - "//-Path: \"cli/src/command/command.ts\"\r"
+                  - "import \"./help\";\r"
+                  - "import \"./init\";\r"
+                  - "import \"./make\";\r"
+                  - "import \"./render\";\r"
+                  - "import \"./format\";\r"
+                  - "import { program } from \"commander\";\r"
+                  - "\r"
+                  - "// Configure the CLI program\r"
+                  - "program\r"
+                  - "    .name(\"tcc\")\r"
+                  - "    .description(\"CLI tool to create project structure from YAML configuration\")\r"
+                  - "    .version(process.version);\r"
+                  - "\r"
+                  - "const args = process.argv;\r"
+                  - "// check if there are any arguments\r"
+                  - "if (args.length > 2) program.parse(args);\r"
+                  - "\r"
+                  - "// If no arguments are provided, show help\r"
+                  - "if (!args.slice(2).length) program.outputHelp();\r"
+                  - ''
+              - name: format
+                type: ts
+                code:
+                  - "// -Path: \"cli/src/command/format.ts\"\r"
+                  - "import chalk from 'chalk';\r"
+                  - "import * as path from 'path';\r"
+                  - "import * as fs from 'fs-extra';\r"
+                  - "import chokidar from 'chokidar';\r"
+                  - "import { program } from 'commander';\r"
+                  - "import getConfig from './function/config/getConfig';\r"
+                  - "import formatFile from './function/format/formatFile';\r"
+                  - "import formatDirectory from './function/format/formatDirectory';\r"
+                  - "\r"
+                  - "program\r"
+                  - "    .command('format')\r"
+                  - "    .argument('<path>', 'path to format')\r"
+                  - "    .description('Format code (use -w or --watch for watch mode)')\r"
+                  - "    .option('-w, --watch', 'watch for changes')\r"
+                  - "    .action(async (targetPath: string, options: { watch?: boolean }) => {\r"
+                  - "        const fullPath = path.resolve(process.cwd(), targetPath);\r"
+                  - "        const configJson = await getConfig(fullPath, {\r"
+                  - "            format: { watch: options.watch },\r"
+                  - "        });\r"
+                  - "\r"
+                  - "        if (configJson.format?.watch) {\r"
+                  - "            await formatDirectory(fullPath, configJson, configJson.exclude);\r"
+                  - "\r"
+                  - "            console.log(chalk.blue.bold(`👀 Watching for changes in ${fullPath}\\\\...`));\r"
+                  - "            const watcher = chokidar.watch(fullPath, {\r"
+                  - "                persistent: true,\r"
+                  - "                ignoreInitial: false,\r"
+                  - "            });\r"
+                  - "\r"
+                  - "            watcher.on('change', async (filePath) => {\r"
+                  - "                const ext = path.extname(filePath);\r"
+                  - "                const supportedExtensions = ['.ts', '.tsx', '.js', '.jsx', '.json'];\r"
+                  - "\r"
+                  - "                const isExcluded = configJson.exclude?.some((excludePath) =>\r"
+                  - "                    filePath.includes(excludePath),\r"
+                  - "                );\r"
+                  - "\r"
+                  - "                if (supportedExtensions.includes(ext) && !isExcluded) {\r"
+                  - "                    const code = await fs.readFile(filePath, 'utf8');\r"
+                  - "                    const formatted = await formatFile(filePath, code, configJson);\r"
+                  - "\r"
+                  - "                    if (formatted !== code) {\r"
+                  - "                        await fs.writeFile(filePath, formatted, 'utf8');\r"
+                  - "                        console.log(chalk.green(`✅ Formatted: ${filePath}`));\r"
+                  - "                    }\r"
+                  - "                }\r"
+                  - "            });\r"
+                  - "\r"
+                  - "            watcher.on('error', (error) => {\r"
+                  - "                console.error(chalk.red(`❌ Watcher error: ${error}`));\r"
+                  - "            });\r"
+                  - "        } else {\r"
+                  - "            console.log(chalk.blue.bold(`🔨 Formatting code in ${fullPath}\\\\...`));\r"
+                  - "            await formatDirectory(fullPath, configJson, configJson.exclude);\r"
+                  - "            console.log(chalk.green.bold(`✅ Done formatting code in ${fullPath}\\\\`));\r"
+                  - "        }\r"
+                  - "    });\r"
+                  - ''
+              - name: function
+                type: folder
+                children:
+                  - name: config
+                    type: folder
+                    children:
+                      - name: findConfigJson
+                        type: ts
+                        code:
+                          - "// -Path: \"cli/src/command/function/config/findConfigJson.ts\"\r"
+                          - "import chalk from \"chalk\";\r"
+                          - "import * as path from \"path\";\r"
+                          - "import * as fs from \"fs-extra\";\r"
+                          - "import { TccConfigJson } from \"../../types/config\";\r"
+                          - "\r"
+                          - "export default async function findConfigJson(\r"
+                          - "    rootPath: string,\r"
+                          - "): Promise<TccConfigJson> {\r"
+                          - "    const configFileName = \"tcc.config.json\";\r"
+                          - "    let currentPath = path.resolve(process.cwd(), rootPath);\r"
+                          - "\r"
+                          - "    while (currentPath !== path.parse(currentPath).root) {\r"
+                          - "        const configPath = path.join(currentPath, configFileName);\r"
+                          - "\r"
+                          - "        if (await fs.pathExists(configPath)) {\r"
+                          - "            try {\r"
+                          - "                const configContent = await fs.readFile(configPath, \"utf8\");\r"
+                          - "                const config = JSON.parse(configContent) as TccConfigJson;\r"
+                          - "                console.log(chalk.blue(`📄 Found tcc.config.json at ${configPath}\\n`));\r"
+                          - "                return config;\r"
+                          - "            } catch (error) {\r"
+                          - "                throw new Error(\r"
+                          - "                    `Failed to parse ${configPath}: ${error instanceof Error ? error.message : String(error)}`,\r"
+                          - "                );\r"
+                          - "            }\r"
+                          - "        }\r"
+                          - "\r"
+                          - "        currentPath = path.dirname(currentPath);\r"
+                          - "    }\r"
+                          - "\r"
+                          - "    throw new Error(\"No tcc.config.json found\");\r"
+                          - "}\r"
+                          - ''
+                      - name: getConfig
+                        type: ts
+                        code:
+                          - "// -Path: \"cli/src/command/function/config/getConfig.ts\"\r"
+                          - "import { Obj } from \"../../../class/obj\";\r"
+                          - "import findConfigJson from \"./findConfigJson\";\r"
+                          - "import { TccConfigJson } from \"../../types/config\";\r"
+                          - "\r"
+                          - "export default async function getConfig(\r"
+                          - "    targetPath: string,\r"
+                          - "    defaultConfig: TccConfigJson,\r"
+                          - "): Promise<TccConfigJson> {\r"
+                          - "    try {\r"
+                          - "        const configJson = await findConfigJson(targetPath);\r"
+                          - "        return Obj.mix(defaultConfig, configJson);\r"
+                          - "    } catch (_err) {\r"
+                          - "        return defaultConfig;\r"
+                          - "    }\r"
+                          - "}\r"
+                          - ''
+                  - name: format
+                    type: folder
+                    children:
+                      - name: formatComment
+                        type: ts
+                        code:
+                          - "// -Path: \"cli/src/command/function/format/formatComment.ts\"\r"
+                          - "import { TccConfigJson } from \"../../types/config\";\r"
+                          - "\r"
+                          - "export default function formatComment(\r"
+                          - "    filePath: string,\r"
+                          - "    code: string,\r"
+                          - "    tccConfigJson: TccConfigJson,\r"
+                          - "): string {\r"
+                          - "    \r"
+                          - "    return code;\r"
+                          - "}\r"
+                          - ''
+                      - name: formatDirectory
+                        type: ts
+                        code:
+                          - "// -Path: \"cli/src/command/function/format/formatDirectory.ts\"\r"
+                          - "import * as path from \"path\";\r"
+                          - "import * as fs from \"fs-extra\";\r"
+                          - "import formatFile from \"./formatFile\";\r"
+                          - "import { TccConfigJson } from \"../../types/config\";\r"
+                          - "\r"
+                          - "/**\r"
+                          - " * Recursively format files in a directory\r"
+                          - " */\r"
+                          - "export default async function formatDirectory(\r"
+                          - "    dirPath: string,\r"
+                          - "    configJson: TccConfigJson,\r"
+                          - "    exclude: string[] = [],\r"
+                          - "): Promise<void> {\r"
+                          - "    const files = await fs.readdir(dirPath);\r"
+                          - "\r"
+                          - "    for (const file of files) {\r"
+                          - "        const filePath = path.join(dirPath, file);\r"
+                          - "        const stat = await fs.stat(filePath);\r"
+                          - "\r"
+                          - "        if (stat.isDirectory())\r"
+                          - "            await formatDirectory(filePath, configJson, exclude);\r"
+                          - "        else if (stat.isFile()) {\r"
+                          - "            const ext = path.extname(file);\r"
+                          - "            const supportedExtensions = [\".ts\", \".tsx\", \".js\", \".jsx\", \".json\"];\r"
+                          - "\r"
+                          - "            if (supportedExtensions.includes(ext)) {\r"
+                          - "                const isExcluded = exclude.some((excludePath) =>\r"
+                          - "                    filePath.includes(excludePath),\r"
+                          - "                );\r"
+                          - "\r"
+                          - "                if (!isExcluded) {\r"
+                          - "                    const code = await fs.readFile(filePath, \"utf8\");\r"
+                          - "                    const formatted = await formatFile(\r"
+                          - "                        filePath,\r"
+                          - "                        code,\r"
+                          - "                        configJson,\r"
+                          - "                    );\r"
+                          - "\r"
+                          - "                    if (formatted !== code) {\r"
+                          - "                        await fs.writeFile(filePath, formatted, \"utf8\");\r"
+                          - "                    }\r"
+                          - "                }\r"
+                          - "            }\r"
+                          - "        }\r"
+                          - "    }\r"
+                          - "}\r"
+                          - ''
+                      - name: formatFile
+                        type: ts
+                        code:
+                          - "// -Path: \"cli/src/command/function/format/formatFile.ts\"\r"
+                          - "import chalk from \"chalk\";\r"
+                          - "import formatLog from \"./formatLog\";\r"
+                          - "import formatComment from \"./formatComment\";\r"
+                          - "import formatPrettier from \"./formatPrettier\";\r"
+                          - "import { TccConfigJson } from \"../../types/config\";\r"
+                          - "\r"
+                          - "export default async function formatFile(\r"
+                          - "    filePath: string,\r"
+                          - "    code: string,\r"
+                          - "    tccConfigJson: TccConfigJson,\r"
+                          - "): Promise<string> {\r"
+                          - "    try {\r"
+                          - "        const formatted = await formatPrettier(filePath, code, tccConfigJson);\r"
+                          - "        const commented = formatComment(filePath, formatted, tccConfigJson);\r"
+                          - "        const afterCode = commented;\r"
+                          - "        formatLog(filePath, code, afterCode);\r"
+                          - "\r"
+                          - "        return afterCode;\r"
+                          - "    } catch (error) {\r"
+                          - "        if ((error as any).code === \"EBUSY\") {\r"
+                          - "            console.error(chalk.yellow(`⚠️  File busy, skipping: ${filePath}`));\r"
+                          - "        } else {\r"
+                          - "            console.error(\r"
+                          - "                chalk.red(`❌ Failed to format ${filePath}: ${error}`),\r"
+                          - "            );\r"
+                          - "        }\r"
+                          - "        return code;\r"
+                          - "    }\r"
+                          - "}\r"
+                          - ''
+                      - name: formatLog
+                        type: ts
+                        code:
+                          - "// -Path: \"cli/src/command/function/format/formatLog.ts\"\r"
+                          - "import chalk from \"chalk\";\r"
+                          - "import * as diff from \"diff\";\r"
+                          - "\r"
+                          - "export default function formatLog(\r"
+                          - "    filePath: string,\r"
+                          - "    code: string,\r"
+                          - "    afterCode: string,\r"
+                          - "): void {\r"
+                          - "    if (afterCode !== code) {\r"
+                          - "        const charDiff = afterCode.length - code.length;\r"
+                          - "        const diffText = charDiff > 0 ? `+${charDiff}` : `${charDiff}`;\r"
+                          - "        const diffColor = charDiff > 0 ? chalk.green : chalk.red;\r"
+                          - "\r"
+                          - "        console.log(chalk.cyan(`  📝 ${filePath}`));\r"
+                          - "        console.log(chalk.gray(`     Before: ${code.length} chars`));\r"
+                          - "        console.log(\r"
+                          - "            chalk.gray(`     After:  ${afterCode.length} chars `) +\r"
+                          - "                diffColor(`(${diffText})`),\r"
+                          - "        );\r"
+                          - "\r"
+                          - "        const changes = diff.diffLines(code, afterCode);\r"
+                          - "        changes.forEach((change: diff.Change) => {\r"
+                          - "            if (change.added) {\r"
+                          - "                console.log(chalk.green(`     + ${change.count} lines added`));\r"
+                          - "            } else if (change.removed) {\r"
+                          - "                console.log(chalk.red(`     - ${change.count} lines removed`));\r"
+                          - "            }\r"
+                          - "        });\r"
+                          - "\r"
+                          - "        console.log(\"\");\r"
+                          - "    }\r"
+                          - "}\r"
+                          - ''
+                      - name: formatPrettier
+                        type: ts
+                        code:
+                          - "// -Path: \"cli/src/command/function/format/formatPrettier.ts\"\r"
+                          - "import * as prettier from \"prettier\";\r"
+                          - "import { TccConfigJson } from \"../../types/config\";\r"
+                          - "\r"
+                          - "export default async function formatPrettier(\r"
+                          - "    filePath: string,\r"
+                          - "    code: string,\r"
+                          - "    tccConfigJson: TccConfigJson,\r"
+                          - "): Promise<string> {\r"
+                          - "    const prettierConfig = tccConfigJson.format?.prettier;\r"
+                          - "\r"
+                          - "    const defaultOptions: prettier.Options = {\r"
+                          - "        semi: true,\r"
+                          - "        tabWidth: 4,\r"
+                          - "        useTabs: true,\r"
+                          - "        endOfLine: \"lf\",\r"
+                          - "        printWidth: 80,\r"
+                          - "        quoteProps: \"as-needed\",\r"
+                          - "        singleQuote: true,\r"
+                          - "        arrowParens: \"always\",\r"
+                          - "        trailingComma: \"all\",\r"
+                          - "        bracketSpacing: true,\r"
+                          - "        jsxSingleQuote: true,\r"
+                          - "        bracketSameLine: false,\r"
+                          - "        htmlWhitespaceSensitivity: \"strict\",\r"
+                          - "    };\r"
+                          - "    const options: prettier.Options = {\r"
+                          - "        filepath: filePath,\r"
+                          - "        semi: prettierConfig?.semicolon,\r"
+                          - "        tabWidth: prettierConfig?.tabWidth,\r"
+                          - "        useTabs: prettierConfig?.useTabs,\r"
+                          - "        endOfLine: prettierConfig?.endOfLine,\r"
+                          - "        printWidth: prettierConfig?.printWidth,\r"
+                          - "        quoteProps: prettierConfig?.quoteProps,\r"
+                          - "        singleQuote: prettierConfig?.singleQuote,\r"
+                          - "        arrowParens: prettierConfig?.arrowParens,\r"
+                          - "        trailingComma: prettierConfig?.trailingComma,\r"
+                          - "        bracketSpacing: prettierConfig?.bracketSpacing,\r"
+                          - "        jsxSingleQuote: prettierConfig?.jsxSingleQuote,\r"
+                          - "        bracketSameLine: prettierConfig?.bracketSameLine,\r"
+                          - "        htmlWhitespaceSensitivity: prettierConfig?.htmlSpace,\r"
+                          - "    };\r"
+                          - "    const prettierOptions = { ...defaultOptions, ...options };\r"
+                          - "\r"
+                          - "    const formatted = await prettier.format(code, prettierOptions);\r"
+                          - "    return formatted;\r"
+                          - "}\r"
+                          - ''
+                  - name: structure
+                    type: folder
+                    children:
+                      - name: make
+                        type: folder
+                        children:
+                          - name: file
+                            type: ts
+                            code:
+                              - "// -Path: \"cli/src/command/function/structure/make/file.ts\"\r"
+                              - "import path from 'path';\r"
+                              - "import fs from 'fs-extra';\r"
+                              - "\r"
+                              - "export function getFileExtension(filename: string): string {\r"
+                              - "    const ext = path.extname(filename).slice(1);\r"
+                              - "    return ext || 'unknown';\r"
+                              - "}\r"
+                              - "\r"
+                              - "export function getFileContent(filePath: string): string[] {\r"
+                              - "    try {\r"
+                              - "        const content = fs.readFileSync(filePath, 'utf8');\r"
+                              - "        return content.split('\\n');\r"
+                              - "    } catch {\r"
+                              - "        return [];\r"
+                              - "    }\r"
+                              - "}\r"
+                              - ''
+                          - name: makeStructure
+                            type: ts
+                            code:
+                              - >-
+                                // -Path:
+                                "cli/src/command/function/structure/makeStructure.ts"
+                              - import chalk from 'chalk';
+                              - import * as path from 'path';
+                              - import * as fs from 'fs-extra';
+                              - import * as yaml from 'js-yaml';
+                              - import scanDirectory from './scanDirectory';
+                              - >-
+                                import { TccConfigJson } from
+                                '../../../types/config';
+                              - >-
+                                import { StructureData, WorkSpace } from
+                                '../../../types/structure';
+                              - ''
+                              - >-
+                                export default async function
+                                makeStructure(targetPath: string, tccConfig:
+                                TccConfigJson) {
+                              - '    try {'
+                              - '        const { make } = tccConfig;'
+                              - '        const output = make?.output;'
+                              - '        if (!output || (!output.endsWith(''.yml'') && !output.endsWith(''.yaml'') && !output.endsWith(''.json'')))'
+                              - '            throw new Error(''Output file must have .yaml, .yml, or .json extension'');'
+                              - ''
+                              - '        console.log(chalk.green(`🔍 Scanning directory: ${targetPath}`));'
+                              - ''
+                              - '        const src = await scanDirectory(targetPath);'
+                              - ''
+                              - '        const workspace: WorkSpace = {'
+                              - '            name: make?.name || ''my-workspace'','
+                              - '            run: make?.run || '''','
+                              - '            pack: {},'
+                              - '            src,'
+                              - '        };'
+                              - ''
+                              - '        const structureData: StructureData = {'
+                              - '            $schema:'
+                              - '                ''https://raw.githubusercontent.com/TeaChocoOfficial/cli/main/structure.schema.json'','
+                              - '            workspaces: [workspace],'
+                              - '        };'
+                              - ''
+                              - '        const outputPath = path.join(process.cwd(), output);'
+                              - '        const yamlContent = yaml.dump(structureData, { indent: 2 });'
+                              - ''
+                              - '        await fs.writeFile(outputPath, yamlContent);'
+                              - ''
+                              - '        console.log(chalk.green(`\n✅ Successfully generated ${output}`));'
+                              - '        console.log(chalk.gray(`   Workspace name: ${workspace.name}`));'
+                              - '        console.log(chalk.gray(`   Files scanned: ${src.length}`));'
+                              - '    } catch (error) {'
+                              - '        console.error('
+                              - '            chalk.red(''Failed to generate structure:''),'
+                              - '            error instanceof Error ? error.message : error,'
+                              - '        );'
+                              - '        process.exit(1);'
+                              - '    }'
+                              - '}'
+                              - ''
+                          - name: scanDirectory
+                            type: ts
+                            code:
+                              - "// -Path: \"cli/src/command/function/structure/make/scanDirectory.ts\"\r"
+                              - "import path from 'path';\r"
+                              - "import fs from 'fs-extra';\r"
+                              - "import { FileNode } from \"../../../types/file\";\r"
+                              - "import { getFileExtension, getFileContent } from \"./file\";\r"
+                              - "\r"
+                              - "export default async function scanDirectory(\r"
+                              - "    dirPath: string,\r"
+                              - "    ignorePatterns: string[] = ['node_modules', '.git', 'dist', 'build'],\r"
+                              - "): Promise<FileNode[]> {\r"
+                              - "    const nodes: FileNode[] = [];\r"
+                              - "    const entries = await fs.readdir(dirPath, { withFileTypes: true });\r"
+                              - "\r"
+                              - "    for (const entry of entries) {\r"
+                              - "        if (ignorePatterns.includes(entry.name)) continue;\r"
+                              - "\r"
+                              - "        const fullPath = path.join(dirPath, entry.name);\r"
+                              - "\r"
+                              - "        if (entry.isDirectory()) {\r"
+                              - "            const children = await scanDirectory(fullPath, ignorePatterns);\r"
+                              - "            nodes.push({\r"
+                              - "                name: entry.name,\r"
+                              - "                type: 'folder',\r"
+                              - "                children,\r"
+                              - "            });\r"
+                              - "        } else if (entry.isFile()) {\r"
+                              - "            const ext = getFileExtension(entry.name);\r"
+                              - "            if (['ts', 'tsx', 'png', 'jpg', 'jpeg', 'svg'].includes(ext)) {\r"
+                              - "                nodes.push({\r"
+                              - "                    name: path.parse(entry.name).name,\r"
+                              - "                    type: ext,\r"
+                              - "                    code:\r"
+                              - "                        ext !== 'png' && ext !== 'jpg' && ext !== 'jpeg' && ext !== 'svg'\r"
+                              - "                            ? getFileContent(fullPath)\r"
+                              - "                            : [],\r"
+                              - "                });\r"
+                              - "            }\r"
+                              - "        }\r"
+                              - "    }\r"
+                              - "\r"
+                              - "    return nodes;\r"
+                              - "}\r"
+                              - ''
+                      - name: render
+                        type: folder
+                        children:
+                          - name: renderStructure
+                            type: ts
+                            code:
+                              - "// -Path: \"cli/src/function/renderStructure.ts\"\r"
+                              - "import chalk from 'chalk';\r"
+                              - "import { RenderOptions } from '../../../render';\r"
+                              - "import StructureConfig from './structureManager';\r"
+                              - "import { TccConfigJson } from '../../../types/config';\r"
+                              - "\r"
+                              - "export default async function renderStructure(\r"
+                              - "    targetPath: string,\r"
+                              - "    configJson: TccConfigJson,\r"
+                              - "    options: RenderOptions,\r"
+                              - "): Promise<void> {\r"
+                              - "    const structureConfig = new StructureConfig(configJson);\r"
+                              - "    const isForce: boolean = options.force ?? configJson.render?.force ?? false;\r"
+                              - "\r"
+                              - "    try {\r"
+                              - "        const data = await structureConfig.getData(targetPath);\r"
+                              - "\r"
+                              - "        const workspacesToRender = options.name\r"
+                              - "            ? data.workspaces.filter((ws) => ws.name === options.name)\r"
+                              - "            : data.workspaces;\r"
+                              - "\r"
+                              - "        if (workspacesToRender.length === 0) {\r"
+                              - "            console.log(chalk.yellow(`No workspace found with name: ${options.name}`));\r"
+                              - "            return;\r"
+                              - "        }\r"
+                              - "\r"
+                              - "        for (const workspace of workspacesToRender) {\r"
+                              - "            const src = await structureConfig.createRoot(workspace, isForce);\r"
+                              - "\r"
+                              - "            for (const node of src) {\r"
+                              - "                const rootPath = structureConfig.getRootPath(workspace);\r"
+                              - "                await structureConfig.createFiles(node, rootPath, isForce);\r"
+                              - "            }\r"
+                              - "        }\r"
+                              - "\r"
+                              - "        console.log(\r"
+                              - "            chalk.green(\r"
+                              - "                `\\n✅ Successfully created project structure at ${structureConfig.basePath}`,\r"
+                              - "            ),\r"
+                              - "        );\r"
+                              - "    } catch (error) {\r"
+                              - "        console.error(\r"
+                              - "            'Failed to render structure:',\r"
+                              - "            error instanceof Error ? error.message : error,\r"
+                              - "        );\r"
+                              - "        process.exit(1);\r"
+                              - "    }\r"
+                              - "}\r"
+                              - ''
+                          - name: StructureFile
+                            type: ts
+                            code:
+                              - "// -Path: \"cli/src/command/function/structure/StructureFile.ts\"\r"
+                              - "import chalk from 'chalk';\r"
+                              - "import * as path from 'path';\r"
+                              - "import * as fs from 'fs-extra';\r"
+                              - "import { FileNode } from '../../../types/file';\r"
+                              - "\r"
+                              - "export default class StructureFile {\r"
+                              - "    private node: FileNode;\r"
+                              - "    private currentPath: string;\r"
+                              - "    private force: boolean;\r"
+                              - "\r"
+                              - "    constructor(currentPath: string, node: FileNode, force: boolean = false) {\r"
+                              - "        this.node = node;\r"
+                              - "        this.currentPath = currentPath;\r"
+                              - "        this.force = force;\r"
+                              - "    }\r"
+                              - "\r"
+                              - "    async render(node?: FileNode, basePath?: string) {\r"
+                              - "        const fileNode = node ?? this.node;\r"
+                              - "        const currentPath = basePath ? path.join(basePath, fileNode.name) : this.currentPath;\r"
+                              - "        console.log(chalk.gray(`\\n📁 Render ${currentPath}`));\r"
+                              - "        if (fileNode.type === 'folder') {\r"
+                              - "            await this.createFolder(currentPath, fileNode);\r"
+                              - "        } else {\r"
+                              - "            await this.createFile(fileNode, basePath ?? this.currentPath);\r"
+                              - "        }\r"
+                              - "    }\r"
+                              - "\r"
+                              - "    async createFolder(currentPath: string, node: FileNode) {\r"
+                              - "        const exists = await fs.pathExists(currentPath);\r"
+                              - "        if (exists && !this.force) {\r"
+                              - "            console.log(chalk.gray(`📁 Skip folder ${currentPath} (already exists)`));\r"
+                              - "        } else {\r"
+                              - "            console.log(chalk.yellow(`📁 Create folder ${currentPath}`));\r"
+                              - "            await fs.ensureDir(currentPath);\r"
+                              - "        }\r"
+                              - "        if (node.children) {\r"
+                              - "            for (const child of node.children) {\r"
+                              - "                await this.render(child, currentPath);\r"
+                              - "            }\r"
+                              - "        }\r"
+                              - "    }\r"
+                              - "\r"
+                              - "    async createFile(child: FileNode, currentPath: string) {\r"
+                              - "        const filePath = path.join(currentPath, child.name);\r"
+                              - "        let content = '';\r"
+                              - "        let ext = child.type;\r"
+                              - "\r"
+                              - "        if (child.code && child.code.length > 0) {\r"
+                              - "            content = child.code.join('\\n');\r"
+                              - "        }\r"
+                              - "\r"
+                              - "        const supportedTypes = ['folder', 'ts', 'tsx', 'png'];\r"
+                              - "        if (!supportedTypes.includes(child.type)) {\r"
+                              - "            throw new Error(`Unsupported file type: ${child.type}`);\r"
+                              - "        }\r"
+                              - "\r"
+                              - "        switch (child.type) {\r"
+                              - "            case 'ts':\r"
+                              - "            case 'tsx':\r"
+                              - "                ext = `.${child.type}`;\r"
+                              - "                break;\r"
+                              - "            case 'png':\r"
+                              - "                ext = `.${child.type}`;\r"
+                              - "                content = child.code?.[0] || '';\r"
+                              - "                break;\r"
+                              - "        }\r"
+                              - "\r"
+                              - "        const fileFullPath = `${filePath}${ext}`;\r"
+                              - "        const exists = await fs.pathExists(fileFullPath);\r"
+                              - "        if (exists && !this.force) {\r"
+                              - "            console.log(chalk.redBright(`📄 Skip file ${fileFullPath} (already exists)`));\r"
+                              - "            console.log(chalk.gray(`   Tip: Use -f or --force to overwrite`));\r"
+                              - "        } else {\r"
+                              - "            await fs.writeFile(fileFullPath, content);\r"
+                              - "            console.log(chalk.cyan(`📄 Create file ${fileFullPath}`));\r"
+                              - "        }\r"
+                              - "    }\r"
+                              - "}\r"
+                              - ''
+                          - name: structureManager
+                            type: ts
+                            code:
+                              - "// -Path: \"cli/src/command/function/structure/structureConfig.ts\"\r"
+                              - "import chalk from 'chalk';\r"
+                              - "import * as path from 'path';\r"
+                              - "import * as fs from 'fs-extra';\r"
+                              - "import * as yaml from 'js-yaml';\r"
+                              - "import { FileNode } from '../../../types/file';\r"
+                              - "import StructureFile from './StructureFile';\r"
+                              - "import { TccConfigJson } from '../../../types/config';\r"
+                              - "import { StructureData, WorkSpace } from '../../../types/structure';\r"
+                              - "\r"
+                              - "export default class StructureManager {\r"
+                              - "    public basePath: string = '.';\r"
+                              - "    private configJson: TccConfigJson;\r"
+                              - "    private structureData: StructureData | null = null;\r"
+                              - "\r"
+                              - "    constructor(configJson: TccConfigJson) {\r"
+                              - "        this.configJson = configJson;\r"
+                              - "    }\r"
+                              - "\r"
+                              - "    getPath(targetPath: string): string {\r"
+                              - "        const { render } = this.configJson;\r"
+                              - "        const structurePath: string[] = render?.structurePath\r"
+                              - "            ? [render?.structurePath]\r"
+                              - "            : [targetPath, 'teachoco-dev.yaml'];\r"
+                              - "        this.basePath = this.configJson.render?.basePath ?? targetPath;\r"
+                              - "        const teachocoDevPath = path.join(process.cwd(), ...structurePath);\r"
+                              - "        return teachocoDevPath;\r"
+                              - "    }\r"
+                              - "\r"
+                              - "    async getData(structurePath: string): Promise<StructureData> {\r"
+                              - "        const teachocoDevPath = this.getPath(structurePath);\r"
+                              - "        const structureContent = await fs.readFile(teachocoDevPath, 'utf8');\r"
+                              - "        console.log(chalk.green(`🦴 Reading structure from ${teachocoDevPath}`));\r"
+                              - "        if (teachocoDevPath.endsWith('.yaml') || teachocoDevPath.endsWith('.yml'))\r"
+                              - "            return this.setData(yaml.load(structureContent) as StructureData);\r"
+                              - "        else if (teachocoDevPath.endsWith('.json'))\r"
+                              - "            return this.setData(JSON.parse(structureContent) as StructureData);\r"
+                              - "        throw new Error('Structure file must be a YAML or JSON file');\r"
+                              - "    }\r"
+                              - "\r"
+                              - "    setData(data: StructureData) {\r"
+                              - "        this.structureData = data;\r"
+                              - "        return this.structureData;\r"
+                              - "    }\r"
+                              - "\r"
+                              - "    getRootPath(workspace: WorkSpace): string {\r"
+                              - "        return path.join(process.cwd(), this.basePath, workspace.name);\r"
+                              - "    }\r"
+                              - "\r"
+                              - "    async createRoot(workspace: WorkSpace, force?: boolean): Promise<FileNode[]> {\r"
+                              - "        if (!workspace) throw new Error('Workspace data not found');\r"
+                              - "        if (!workspace.name || !workspace.src)\r"
+                              - "            throw new Error(\"Invalid workspace data: 'name' and 'src' are required\");\r"
+                              - "\r"
+                              - "        const rootPath = this.getRootPath(workspace);\r"
+                              - "        console.log(chalk.green(`📁 Creating root directory: ${rootPath}`));\r"
+                              - "\r"
+                              - "        await fs.ensureDir(rootPath);\r"
+                              - "\r"
+                              - "        if (force) await fs.emptyDir(rootPath);\r"
+                              - "\r"
+                              - "        return workspace.src;\r"
+                              - "    }\r"
+                              - "\r"
+                              - "    /**\r"
+                              - "     * Create files and folders from a FileNode\r"
+                              - "     * @param node The file or folder node to create\r"
+                              - "     * @param basePath The base path to create the node in (defaults to this.basePath)\r"
+                              - "     */\r"
+                              - "    async createFiles(node: FileNode, basePath: string, force: boolean = false): Promise<void> {\r"
+                              - "        const currentPath = path.join(basePath, node.name);\r"
+                              - "        const structureFile = new StructureFile(currentPath, node, force);\r"
+                              - "        await structureFile.render();\r"
+                              - "\r"
+                              - "        // if (node.type === 'folder') {\r"
+                              - "        //     await fs.ensureDir(currentPath);\r"
+                              - "        //     if (node.children) {\r"
+                              - "        //         for (const child of node.children) {\r"
+                              - "        //             await this.createFile(child, currentPath);\r"
+                              - "        //         }\r"
+                              - "        //     }\r"
+                              - "        // } else {\r"
+                              - "        //     let content = '';\r"
+                              - "        //     let ext = node.type;\r"
+                              - "\r"
+                              - "        //     if (node.code && node.code.length > 0) {\r"
+                              - "        //         content = node.code.join('\\n');\r"
+                              - "        //     }\r"
+                              - "\r"
+                              - "        //     const supportedTypes = ['folder', 'ts', 'tsx', 'png'];\r"
+                              - "        //     if (!supportedTypes.includes(node.type)) {\r"
+                              - "        //         throw new Error(`Unsupported file type: ${node.type}`);\r"
+                              - "        //     }\r"
+                              - "\r"
+                              - "        //     switch (node.type) {\r"
+                              - "        //         case 'ts':\r"
+                              - "        //         case 'tsx':\r"
+                              - "        //             ext = `.${node.type}`;\r"
+                              - "        //             break;\r"
+                              - "        //         case 'png':\r"
+                              - "        //             content = node.code?.[0] || '';\r"
+                              - "        //             // TODO: เพิ่มการจัดการไฟล์ภาพ เช่น แปลง base64 หรือคัดลอกไฟล์\r"
+                              - "        //             break;\r"
+                              - "        //     }\r"
+                              - "\r"
+                              - "        //     await fs.writeFile(`${currentPath}${ext}`, content);\r"
+                              - "        // }\r"
+                              - "    }\r"
+                              - "}\r"
+                              - ''
+              - name: help
+                type: ts
+                code:
+                  - "//-Path: \"cli/src/command/help.ts\"\r"
+                  - "import { program } from \"commander\";\r"
+                  - "\r"
+                  - "// Show help when no arguments are provided or when using -h\r"
+                  - "program.on(\"--help\", () => {\r"
+                  - "    console.log(\"\");\r"
+                  - "    console.log(\"Examples:\");\r"
+                  - "    console.log(\r"
+                  - "        \"  $ \\\"tcc render {path have teachoco-dev.yaml file}\\\"  Render project structure from YAML file\",\r"
+                  - "    );\r"
+                  - "});\r"
+                  - ''
+              - name: init
+                type: ts
+                code:
+                  - '// -Path: "cli/src/command/init.ts"'
+                  - import chalk from 'chalk';
+                  - import * as path from 'path';
+                  - import * as fs from 'fs-extra';
+                  - import { program } from 'commander';
+                  - import { TccConfigJson } from './types/config';
+                  - ''
+                  - program
+                  - '    .command(''init'')'
+                  - '    .argument(''[path]'', ''path to create config file'')'
+                  - '    .description(''Create a default tcc.config.json in the current directory'')'
+                  - '    .option(''-f, --force'', ''overwrite existing config file'')'
+                  - '    .action(async (targetPath?: string, options: { force?: boolean } = {}) => {'
+                  - '        const configPath = path.resolve(process.cwd(), targetPath || ''.'', ''tcc.config.json'');'
+                  - ''
+                  - '        if (await fs.pathExists(configPath)) {'
+                  - '            console.log(chalk.yellow(`⚠ tcc.config.json already exists at ${configPath}`));'
+                  - '            if (!options.force) {'
+                  - '                console.log(chalk.yellow(''Use --force to overwrite''));'
+                  - '                return;'
+                  - '            }'
+                  - '            console.log(chalk.yellow(''Overwriting existing config file...''));'
+                  - '        }'
+                  - ''
+                  - '        const defaultConfig: TccConfigJson = {'
+                  - '            $schema:'
+                  - '                ''https://raw.githubusercontent.com/TeaChocoOfficial/cli/main/tcc.config.schema.json'','
+                  - '            format: {'
+                  - '                commentPath: true,'
+                  - '                prettier: {'
+                  - '                    semicolon: true,'
+                  - '                    singleQuote: false,'
+                  - '                    tabWidth: 4,'
+                  - '                    trailingComma: ''all'','
+                  - '                    printWidth: 80,'
+                  - '                },'
+                  - '            },'
+                  - '            render: {'
+                  - '                force: true,'
+                  - '            },'
+                  - '            exclude: [''node_modules'', ''dist'', ''.git''],'
+                  - '        };'
+                  - ''
+                  - '        await fs.writeJson(configPath, defaultConfig, { spaces: 2 });'
+                  - '        console.log(chalk.green(`✅ Created tcc.config.json at ${configPath}`));'
+                  - '    });'
+                  - ''
+              - name: make
+                type: ts
+                code:
+                  - '// -Path: "cli/src/command/make.ts"'
+                  - import * as path from 'path';
+                  - import { program } from 'commander';
+                  - import getConfig from './function/config/getConfig';
+                  - >-
+                    import makeStructure from
+                    './function/structure/make/makeStructure';
+                  - ''
+                  - program
+                  - '    .command(''make'')'
+                  - '    .argument(''[path]'', ''path to scan for folder structure (default: current directory)'', ''.'')'
+                  - '    .option(''-w, --watch'', ''watch for changes and update the output file'')'
+                  - '    .option(''-o, --output <file>'', ''output YAML or JSON file name'', ''teachoco-dev.yaml'')'
+                  - '    .option(''-n, --name <name>'', ''workspace name'', ''my-workspace'')'
+                  - '    .option(''-r, --run <command>'', ''run command'', ''npm start'')'
+                  - '    .description(''Generate teachoco-dev.yaml from existing folder structure'')'
+                  - '    .action('
+                  - '        async ('
+                  - '            targetPath: string,'
+                  - '            options: { output?: string; name?: string; run?: string; watch?: boolean },'
+                  - '        ) => {'
+                  - '            const fullPath = path.resolve(process.cwd(), targetPath);'
+                  - '            const configJson = await getConfig(targetPath, {'
+                  - '                make: {'
+                  - '                    watch: options.watch,'
+                  - '                    output: options.output,'
+                  - '                    name: options.name,'
+                  - '                    run: options.run,'
+                  - '                },'
+                  - '            });'
+                  - '            await makeStructure(fullPath, configJson);'
+                  - '        },'
+                  - '    );'
+                  - ''
+              - name: render
+                type: ts
+                code:
+                  - "// -Path: \"cli/src/command/render.ts\"\r"
+                  - "import * as path from 'path';\r"
+                  - "import chokidar from 'chokidar';\r"
+                  - "import { program } from 'commander';\r"
+                  - "import getConfig from './function/config/getConfig';\r"
+                  - "import renderStructure from './function/structure/render/renderStructure';\r"
+                  - "\r"
+                  - "export type RenderOptions = {\r"
+                  - "    watch?: boolean;\r"
+                  - "    name?: string;\r"
+                  - "    force?: boolean;\r"
+                  - "};\r"
+                  - "\r"
+                  - "// Configure the 'render' command\r"
+                  - "program\r"
+                  - "    .command('render')\r"
+                  - "    .argument('<path>', 'path to YAML file (e.g., ./path/to/projects)')\r"
+                  - "    .description('Render folder structure from YAML file')\r"
+                  - "    .option('-w, --watch', 'watch for changes in the YAML file and re-render')\r"
+                  - "    .option('-f, --force', 'force re-render even if no changes detected')\r"
+                  - "    .option('-n, --name <name>', 'render specific workspace by name')\r"
+                  - "    .action(async (targetPath: string, options: RenderOptions) => {\r"
+                  - "        const fullPath = path.resolve(process.cwd(), targetPath);\r"
+                  - "        const configJson = await getConfig(targetPath, {\r"
+                  - "            render: { watch: options.watch },\r"
+                  - "        });\r"
+                  - "        // Run once\r"
+                  - "        await renderStructure(targetPath, configJson, options);\r"
+                  - "\r"
+                  - "        // If --watch option is provided\r"
+                  - "        if (options.watch) {\r"
+                  - "            console.log(`Watching for changes in ${fullPath}...`);\r"
+                  - "            const yamlFilePath = path.resolve(process.cwd(), fullPath);\r"
+                  - "\r"
+                  - "            // Use chokidar to detect changes\r"
+                  - "            const watcher = chokidar.watch(yamlFilePath, {\r"
+                  - "                persistent: true,\r"
+                  - "                ignoreInitial: false,\r"
+                  - "            });\r"
+                  - "\r"
+                  - "            watcher.on('change', async (filePath) => {\r"
+                  - "                console.log(`File ${filePath} changed, re-rendering...`);\r"
+                  - "                await renderStructure(fullPath, configJson, options);\r"
+                  - "            });\r"
+                  - "\r"
+                  - "            // Handle watcher errors\r"
+                  - "            watcher.on('error', (error) => {\r"
+                  - "                console.error('Watcher error:', error);\r"
+                  - "            });\r"
+                  - "        }\r"
+                  - "    });\r"
+                  - ''
+              - name: types
+                type: folder
+                children:
+                  - name: config
+                    type: ts
+                    code:
+                      - "// -Path: \"cli/src/command/types/config.ts\"\r"
+                      - "import { MakeConfig } from './make';\r"
+                      - "import { FormatConfig } from './format';\r"
+                      - "import { RenderConfig } from './render';\r"
+                      - "\r"
+                      - "/**\r"
+                      - " * @description Configuration for the tcc CLI tool\r"
+                      - " */\r"
+                      - "export interface TccConfigJson {\r"
+                      - "    /**\r"
+                      - "     * @description Path to the JSON schema for validation\r"
+                      - "     */\r"
+                      - "    $schema?: string;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Configuration for formatting\r"
+                      - "     */\r"
+                      - "    format?: FormatConfig;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Configuration for rendering\r"
+                      - "     */\r"
+                      - "    render?: RenderConfig;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Configuration for making\r"
+                      - "     */\r"
+                      - "    make?: MakeConfig;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Paths to exclude from processing\r"
+                      - "     */\r"
+                      - "    exclude?: string[];\r"
+                      - "}\r"
+                      - ''
+                  - name: file
+                    type: ts
+                    code:
+                      - "// -Path: \"cli/src/command/types/file.ts\"\r"
+                      - "\r"
+                      - "/**\r"
+                      - " * @description File node structure for project generation\r"
+                      - " */\r"
+                      - "export interface FileNode {\r"
+                      - "    /**\r"
+                      - "     * @description File or folder type (e.g., 'folder', 'ts', 'tsx', 'png')\r"
+                      - "     * @example 'folder', 'ts', 'tsx', 'png'\r"
+                      - "     */\r"
+                      - "    type: string;\r"
+                      - "    /**\r"
+                      - "     * @description File or folder name\r"
+                      - "     */\r"
+                      - "    name: string;\r"
+                      - "    /**\r"
+                      - "     * @description Code lines for files\r"
+                      - "     */\r"
+                      - "    code?: string[];\r"
+                      - "    /**\r"
+                      - "     * @description Child nodes for folders\r"
+                      - "     */\r"
+                      - "    children?: FileNode[];\r"
+                      - "}\r"
+                      - ''
+                  - name: format
+                    type: ts
+                    code:
+                      - "// -Path: \"cli/src/command/types/format.ts\"\r"
+                      - "import { PrettierConfig } from \"./prettier\";\r"
+                      - "\r"
+                      - "export interface FormatConfig {\r"
+                      - "    /**\r"
+                      - "     * @description Watch for changes\r"
+                      - "     * @default false\r"
+                      - "     */\r"
+                      - "    watch?: boolean;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Comment path in file\r"
+                      - "     * @default true\r"
+                      - "     * @param {boolean} true - comment path\r"
+                      - "     * @param {boolean} false - don't comment path\r"
+                      - "     * @param {string} string - comment path with custom text (e.g. \" - Path: 'path'\")\r"
+                      - "     */\r"
+                      - "    commentPath?: boolean | string;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Prettier configuration\r"
+                      - "     */\r"
+                      - "    prettier?: PrettierConfig;\r"
+                      - "}\r"
+                      - ''
+                  - name: make
+                    type: ts
+                    code:
+                      - "// -Path: \"cli/src/command/types/make.ts\"\r"
+                      - "\r"
+                      - "export interface MakeConfig {\r"
+                      - "    /**\r"
+                      - "     * @description Watch for changes and update the output file\r"
+                      - "     * @default false\r"
+                      - "     */\r"
+                      - "    watch?: boolean;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Output file name\r"
+                      - "     */\r"
+                      - "    output?: string;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Workspace name\r"
+                      - "     */\r"
+                      - "    name?: string;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Run command\r"
+                      - "     */\r"
+                      - "    run?: string;\r"
+                      - "}\r"
+                      - ''
+                  - name: prettier
+                    type: ts
+                    code:
+                      - "// -Path: \"cli/src/command/types/prettier.ts\"\r"
+                      - "\r"
+                      - "export interface PrettierConfig {\r"
+                      - "    /**\r"
+                      - "     * @description Add semicolon at the end of line\r"
+                      - "     * @default true\r"
+                      - "     */\r"
+                      - "    semicolon?: boolean;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Tab width\r"
+                      - "     * @default 4\r"
+                      - "     */\r"
+                      - "    tabWidth?: number;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Use tabs instead of spaces\r"
+                      - "     * @default true\r"
+                      - "     */\r"
+                      - "    useTabs?: boolean;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description End of line\r"
+                      - "     * @default \"lf\"\r"
+                      - "     */\r"
+                      - "    endOfLine?: \"lf\" | \"crlf\" | \"cr\" | \"auto\";\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Print width\r"
+                      - "     * @default 80\r"
+                      - "     */\r"
+                      - "    printWidth?: number;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Quote props\r"
+                      - "     * @default \"as-needed\"\r"
+                      - "     */\r"
+                      - "    quoteProps?: \"as-needed\" | \"consistent\" | \"preserve\";\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Use single quotes instead of double quotes\r"
+                      - "     * @default true\r"
+                      - "     */\r"
+                      - "    singleQuote?: boolean;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Arrow parens\r"
+                      - "     * @default \"always\"\r"
+                      - "     */\r"
+                      - "    arrowParens?: \"avoid\" | \"always\";\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Trailing comma\r"
+                      - "     * @default \"all\"\r"
+                      - "     */\r"
+                      - "    trailingComma?: \"all\" | \"es5\" | \"none\";\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Bracket spacing\r"
+                      - "     * @default true\r"
+                      - "     */\r"
+                      - "    bracketSpacing?: boolean;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description JSX single quote\r"
+                      - "     * @default true\r"
+                      - "     */\r"
+                      - "    jsxSingleQuote?: boolean;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Bracket same line\r"
+                      - "     * @default false\r"
+                      - "     */\r"
+                      - "    bracketSameLine?: boolean;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description HTML whitespace sensitivity\r"
+                      - "     * @default \"strict\"\r"
+                      - "     */\r"
+                      - "    htmlSpace?: \"ignore\" | \"strict\" | \"css\";\r"
+                      - "}\r"
+                      - ''
+                  - name: render
+                    type: ts
+                    code:
+                      - "// -Path: \"cli/src/command/types/render.ts\"\r"
+                      - "\r"
+                      - "export interface RenderConfig {\r"
+                      - "    /**\r"
+                      - "     * @description Watch for changes in the YAML file and re-render\r"
+                      - "     * @default false\r"
+                      - "     */\r"
+                      - "    watch?: boolean;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Force re-render even if no changes detected\r"
+                      - "     * @default false\r"
+                      - "     */\r"
+                      - "    force?: boolean;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Base path for rendering\r"
+                      - "     */\r"
+                      - "    basePath?: string;\r"
+                      - "\r"
+                      - "    /**\r"
+                      - "     * @description Path to the YAML or JSON structure file\r"
+                      - "     */\r"
+                      - "    structurePath?: string;\r"
+                      - "}\r"
+                      - ''
+                  - name: structure
+                    type: ts
+                    code:
+                      - "// -Path: \"cli/src/command/types/structure.ts\"\r"
+                      - "import { FileNode } from './file';\r"
+                      - "\r"
+                      - "export interface StructureData {\r"
+                      - "    $schema?: string;\r"
+                      - "    workspaces: WorkSpace[];\r"
+                      - "}\r"
+                      - "\r"
+                      - "export interface WorkSpace {\r"
+                      - "    name: string;\r"
+                      - "    run: string;\r"
+                      - "    pack: Record<string, any>;\r"
+                      - "    src: FileNode[];\r"
+                      - "}\r"
+                      - ''
+          - name: command
+            type: ts
+            code:
+              - "#!/usr/bin/env node\r"
+              - import "./command/command";
+          - name: function
+            type: folder
+            children:
+              - name: deepPartial
+                type: ts
+                code:
+                  - "// -Path: \"cli/src/function/deepPartial.ts\"\r"
+                  - "\r"
+                  - "/**\r"
+                  - " * Deep partial type - makes all nested properties optional\r"
+                  - " */\r"
+                  - "export type DeepPartial<Object> = {\r"
+                  - "    [Key in keyof Object]?: Object[Key] extends object\r"
+                  - "        ? DeepPartial<Object[Key]>\r"
+                  - "        : Object[Key];\r"
+                  - "};\r"
+                  - "\r"
+                  - "/**\r"
+                  - " * Merge data with deep partial\r"
+                  - " * @param data - Original data\r"
+                  - " * @param deep - Partial data to merge\r"
+                  - " * @returns Merged data\r"
+                  - " */\r"
+                  - "export function deepPartial<Data>(data: Data, deep: DeepPartial<Data>): Data {\r"
+                  - "    const newData = { ...data, ...deep };\r"
+                  - "    return newData;\r"
+                  - "}\r"
+                  - ''
+          - name: index
+            type: ts
+            code:
+              - "// -Path: \"cli/src/index.ts\"\r"
+              - "export * from \"./class/str\";\r"
+              - "export * from \"./class/num\";\r"
+              - "export * from \"./class/ary\";\r"
+              - "export * from \"./class/obj\";\r"
+              - "export * from \"./class/time\";\r"
+              - "export * from \"./function/deepPartial\";\r"
+              - ''
+          - name: test
+            type: ts
+            code:
+              - ''
+          - name: types
+            type: folder
+            children:
+              - name: type
+                type: ts
+                code:
+                  - "// -Path: \"cli/src/types/type.ts\"\r"
+                  - "/**\r"
+                  - " * Get union type of all values in a const object\r"
+                  - " */\r"
+                  - >-
+                    export type KeyConst<Const extends Record<string, unknown>>
+                    = Const[keyof Const];
+      - name: test
+        type: folder
+        children:
+          - name: react-app
+            type: folder
+            children:
+              - name: My Files
+                type: folder
+                children:
+                  - name: Documents
+                    type: folder
+                    children:
+                      - name: Report
+                        type: tsx
+                        code:
+                          - import React, { useEffect, useState } from "react"
+                          - ''
+                          - export default function Report() {
+                          - '    const [count, setCount] = useState(0)'
+                          - ''
+                          - '    useEffect(() => {'
+                          - '        setCount(count + 1)'
+                          - '    }, []);'
+                          - ''
+                          - '    return <div></div>'
+                          - '}'
+                      - name: resume
+                        type: ts
+                        code:
+                          - export default function resume() {
+                          - '    return { name: "tea", age: 19, }'
+                          - '}'
+                  - name: Images
+                    type: folder
+                    children:
+                      - name: photo1
+                        type: png
+                        code: []
+                      - name: photo2
+                        type: png
+                        code: []

@@ -1,4 +1,4 @@
-//-Path: "cli/src/index.ts"
+// -Path: "cli/src/index.ts"
 export * from "./class/str";
 export * from "./class/num";
 export * from "./class/ary";

@@ -1,4 +1,4 @@
-//-Path: "cli/gulpfile.js"
+// -Path: "cli/gulpfile.js"
 const gulp = require("gulp");
 const chmod = require("gulp-chmod");
 const insert = require("gulp-insert");

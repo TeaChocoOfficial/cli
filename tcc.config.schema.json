@@ -1,0 +1,115 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "TCC Config",
+    "type": "object",
+    "properties": {
+        "format": {
+            "type": "object",
+            "properties": {
+                "watch": {
+                    "type": "boolean",
+                    "description": "Watch for changes",
+                    "default": false
+                },
+                "commentPath": {
+                    "oneOf": [
+                        {
+                            "type": "boolean",
+                            "description": "Comment path in file"
+                        },
+                        {
+                            "type": "string",
+                            "description": "Comment path with custom text"
+                        }
+                    ],
+                    "description": "Comment path in file",
+                    "default": true
+                },
+                "prettier": {
+                    "type": "object",
+                    "properties": {
+                        "semicolon": {
+                            "type": "boolean",
+                            "description": "Add semicolon at the end of line",
+                            "default": true
+                        },
+                        "tabWidth": {
+                            "type": "integer",
+                            "description": "Tab width",
+                            "default": 4,
+                            "minimum": 0
+                        },
+                        "useTabs": {
+                            "type": "boolean",
+                            "description": "Use tabs instead of spaces",
+                            "default": true
+                        },
+                        "endOfLine": {
+                            "type": "string",
+                            "enum": ["lf", "crlf", "cr", "auto"],
+                            "description": "End of line",
+                            "default": "lf"
+                        },
+                        "printWidth": {
+                            "type": "integer",
+                            "description": "Print width",
+                            "default": 80,
+                            "minimum": 0
+                        },
+                        "quoteProps": {
+                            "type": "string",
+                            "enum": ["as-needed", "consistent", "preserve"],
+                            "description": "Quote props",
+                            "default": "as-needed"
+                        },
+                        "singleQuote": {
+                            "type": "boolean",
+                            "description": "Use single quotes instead of double quotes",
+                            "default": true
+                        },
+                        "arrowParens": {
+                            "type": "string",
+                            "enum": ["avoid", "always"],
+                            "description": "Arrow parens",
+                            "default": "always"
+                        },
+                        "trailingComma": {
+                            "type": "string",
+                            "enum": ["all", "es5", "none"],
+                            "description": "Trailing comma",
+                            "default": "all"
+                        },
+                        "bracketSpacing": {
+                            "type": "boolean",
+                            "description": "Bracket spacing",
+                            "default": true
+                        },
+                        "jsxSingleQuote": {
+                            "type": "boolean",
+                            "description": "JSX single quote",
+                            "default": true
+                        },
+                        "bracketSameLine": {
+                            "type": "boolean",
+                            "description": "Bracket same line",
+                            "default": false
+                        },
+                        "htmlSpace": {
+                            "type": "string",
+                            "enum": ["ignore", "strict", "css"],
+                            "description": "HTML whitespace sensitivity",
+                            "default": "strict"
+                        }
+                    }
+                }
+            }
+        },
+        "exclude": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Paths to exclude"
+        }
+    }
+}

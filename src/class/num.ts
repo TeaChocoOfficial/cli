@@ -1,8 +1,22 @@
 //-Path: "cli/src/class/num.ts"
+/**
+ * Utility class for number operations
+ */
 export abstract class Num {
+    /**
+     * Format number with thousand separators
+     * @param number - Number to format
+     * @returns Formatted number string
+     */
     static format(number: number): string {
         return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     }
+    /**
+     * Format number with suffix (k, m, g, t, p, e, z, y)
+     * @param num - Number to format
+     * @param decimal - Number of decimal places
+     * @returns Formatted number with suffix
+     */
     static count(num: number, decimal: number = 2): string {
         const suffixes = ["", "k", "m", "g", "t", "p", "e", "z", "y"];
         let i = 0;
@@ -24,6 +38,12 @@ export abstract class Num {
 
         return `${formattedNum}${suffixes[i]}`;
     }
+    /**
+     * Round number to specified decimal places
+     * @param num - Number to round
+     * @param decimal - Number of decimal places
+     * @returns Rounded number
+     */
     static rounding(num: number, decimal: number = 2): number {
         const [integerPart, decimalPart] = String(num).split(".");
         if (decimalPart) {
@@ -37,9 +57,20 @@ export abstract class Num {
             return num;
         }
     }
+    /**
+     * Add leading zeros to number
+     * @param num - Number to format
+     * @param index - Number of digits
+     * @returns Number string with leading zeros
+     */
     static zeroNumber(num: number, index: number = 1): string {
         return (num < 10 ** index ? "0" + num : num).toString();
     }
+    /**
+     * Round number to 2 decimal places
+     * @param num - Number to fix
+     * @returns Number rounded to 2 decimal places
+     */
     static fixed(num: number): number {
         return Math.round(num * 100) / 100;
     }

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/TeaChocoOfficial/cli/main/tcc.config.schema.json",
+  "format": {
+    "commentPath": true,
+    "prettier": {
+      "semicolon": true,
+      "singleQuote": false,
+      "tabWidth": 4,
+      "trailingComma": "all",
+      "printWidth": 80
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".git"
+  ]
+}
