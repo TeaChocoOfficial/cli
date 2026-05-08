@@ -11,6 +11,7 @@ export default [
             file: "dist/index.js",
             format: "cjs",
             sourcemap: true,
+            inlineDynamicImports: true,
         },
         plugins: [
             peerDepsExternal(),
@@ -25,6 +26,7 @@ export default [
             file: "dist/command.js",
             format: "cjs",
             sourcemap: true,
+            inlineDynamicImports: true,
         },
         plugins: [
             peerDepsExternal(),
