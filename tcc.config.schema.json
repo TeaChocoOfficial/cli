@@ -3,6 +3,10 @@
     "title": "TCC Config",
     "type": "object",
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "Path to the JSON schema for validation"
+        },
         "format": {
             "type": "object",
             "properties": {
@@ -101,6 +105,51 @@
                             "default": "strict"
                         }
                     }
+                }
+            }
+        },
+        "render": {
+            "type": "object",
+            "properties": {
+                "watch": {
+                    "type": "boolean",
+                    "description": "Watch for changes in the YAML file and re-render",
+                    "default": false
+                },
+                "force": {
+                    "type": "boolean",
+                    "description": "Force re-render even if no changes detected",
+                    "default": false
+                },
+                "basePath": {
+                    "type": "string",
+                    "description": "Base path for rendering"
+                },
+                "structurePath": {
+                    "type": "string",
+                    "description": "Path to the YAML or JSON structure file"
+                }
+            }
+        },
+        "make": {
+            "type": "object",
+            "properties": {
+                "watch": {
+                    "type": "boolean",
+                    "description": "Watch for changes and update the output file",
+                    "default": false
+                },
+                "output": {
+                    "type": "string",
+                    "description": "Output file name"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Workspace name"
+                },
+                "run": {
+                    "type": "string",
+                    "description": "Run command"
                 }
             }
         },
