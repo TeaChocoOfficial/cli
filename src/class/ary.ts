@@ -46,4 +46,8 @@ export abstract class Ary {
         if (array?.length > 1) array.sort(() => Math.random() - 0.5);
         return array;
     }
+
+    static mix<Value>(...arrays: Value[][]): Value[] {
+        return arrays.flat();
+    }
 }

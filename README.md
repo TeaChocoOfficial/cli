@@ -5,7 +5,7 @@ A powerful CLI tool to create and manage project structure from YAML configurati
 ## Installation
 
 ```bash
-npm install -g @teachoco-dev/cli
+npm install -g @teachoco-dev/cli@latest
 ```
 
 ## Commands

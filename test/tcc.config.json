@@ -1,18 +1,52 @@
 {
-  "$schema": "https://raw.githubusercontent.com/TeaChocoOfficial/cli/main/tcc.config.schema.json",
-  "format": {
-    "commentPath": true,
-    "prettier": {
-      "semicolon": true,
-      "singleQuote": false,
-      "tabWidth": 4,
-      "trailingComma": "all",
-      "printWidth": 80
-    }
-  },
-  "exclude": [
-    "node_modules",
-    "dist",
-    ".git"
-  ]
+    "$schema": "https://raw.githubusercontent.com/TeaChocoOfficial/cli/main/tcc.config.schema.json",
+    "format": {
+        "commentPath": {
+            "text": "-Path: '{{0}}'",
+            "isRelativePath": true
+        },
+        "prettier": {
+            "semicolon": true,
+            "singleQuote": false,
+            "tabWidth": 4,
+            "trailingComma": "all",
+            "printWidth": 80
+        }
+    },
+    "lint": {
+        "overrideConfig": [
+            {
+                "files": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
+                "languageOptions": {
+                    "ecmaVersion": 2022,
+                    "sourceType": "module",
+                    "parser": "@typescript-eslint/parser",
+                    "parserOptions": {
+                        "ecmaFeatures": { "jsx": true }
+                    }
+                },
+                "rules": {
+                    "no-unused-vars": "warn",
+                    "no-undef": "error",
+                    "no-console": "off",
+                    "prefer-const": "warn",
+                    "no-var": "error",
+                    "eqeqeq": ["error", "always"]
+                }
+            }
+        ]
+    },
+    "render": {
+        "watch": false,
+        "force": true,
+        "basePath": "./",
+        "structurePath": "./teachoco-dev.yaml"
+    },
+    "make": {
+        "watch": false,
+        "output": "./teachoco-dev.json",
+        "name": "default",
+        "run": "npm run start"
+    },
+    "exclude": ["node_modules", "dist", ".git"]
 }
