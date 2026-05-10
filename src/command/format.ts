@@ -7,4 +7,5 @@ program
     .argument('[path]', 'path to format', '.')
     .description('Format code (use -w or --watch for watch mode)')
     .option('-w, --watch', 'watch for changes')
+    .option('-l, --log', 'log changes')
     .action(Actions.format);

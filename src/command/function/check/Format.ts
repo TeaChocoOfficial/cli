@@ -4,13 +4,12 @@ import chalk from 'chalk';
 import path from 'node:path';
 import * as diff from 'diff';
 import prettier from 'prettier';
+import FormatImport from './FormatImport';
 import FormatComment from './FormatComment';
-import { TccConfigJson } from '../../types/config/config';
+import ActionConfig from '../config/ActionConfig';
 
-export default class Format {
+export default class Format extends ActionConfig {
     supportedExtensions = ['.ts', '.tsx', '.js', '.jsx', '.json'];
-
-    constructor(private tccConfig: TccConfigJson) {}
 
     async directory(dirPath: string): Promise<void> {
         const files = await fs.readdir(dirPath);
@@ -42,9 +41,11 @@ export default class Format {
 
     async file(filePath: string, code: string): Promise<string> {
         try {
-            const formatted = await this.prettier(filePath, code);
             const formatComment = new FormatComment(this.tccConfig);
-            const afterCode = formatComment.comment(filePath, formatted);
+            const formatImport = new FormatImport(this.tccConfig, filePath);
+            const importSorted = formatImport.sort(code);
+            const commented = formatComment.comment(filePath, importSorted);
+            const afterCode = await this.prettier(filePath, commented);
             this.log(filePath, code, afterCode);
 
             return afterCode;

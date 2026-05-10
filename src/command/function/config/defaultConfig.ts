@@ -5,6 +5,7 @@ const defaultConfig: TccConfigJson = {
     $schema: 'https://raw.githubusercontent.com/TeaChocoOfficial/cli/main/tcc.config.schema.json',
     format: {
         commentPath: {
+            enable: true,
             text: "-Path: '{{0}}'",
             isRelativePath: true,
         },
@@ -14,6 +15,22 @@ const defaultConfig: TccConfigJson = {
             tabWidth: 4,
             trailingComma: 'all',
             printWidth: 80,
+        },
+        importSort: {
+            enabled: true,
+            strategy: 'length',
+            patterns: [
+                {
+                    extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs'],
+                    match: "^import\\s+.*?\\s+from\\s+['\"]([^'\"]+)['\"];?$|^import\\s+['\"]([^'\"]+)['\"];?$",
+                    extract: "['\"]([^'\"]+)['\"]",
+                },
+                {
+                    extensions: ['.py'],
+                    match: "^(?:from\\s+([\\w.]+)\\s+import|import\\s+([\\w.]+))",
+                    extract: "(?:from\\s+([\\w.]+)|import\\s+([\\w.]+))",
+                },
+            ],
         },
     },
     lint: {

@@ -1,7 +1,7 @@
 // -Path: "cli/src/command/types/structure.ts"
 import { FileNode } from './file';
 
-export interface StructureData {
+export interface StructureDataJson {
     $schema?: string;
     workspaces: WorkSpace[];
 }

@@ -2,7 +2,7 @@
 import { LintConfig } from './lint';
 import { MakeConfig } from './make';
 import { RenderConfig } from './render';
-import { FormatConfig } from './format';
+import { FormatConfig } from './format/format';
 
 /**
  * @description Configuration for the tcc CLI tool

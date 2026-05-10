@@ -3,7 +3,8 @@ import fs from 'fs-extra';
 import chalk from 'chalk';
 import path from 'node:path';
 import Lint from './check/Lint';
-import chokidar from 'chokidar';
+import Check from './check/Check';
+import Watching from './Watching';
 import Format from './check/Format';
 import { MakeOptions } from '../make';
 import { RenderOptions } from '../render';
@@ -38,150 +39,89 @@ export default class Actions {
         const fullPath = path.resolve(process.cwd(), targetPath);
         const configJson = await getConfig(targetPath, { make: options });
         const makeStructure = new MakeStructure(configJson);
-        await makeStructure.make(fullPath);
+        const watching = new Watching(fullPath);
+
+        watching.once(async () => await makeStructure.make(targetPath));
+        watching.runing(configJson.make?.watch);
     }
 
     static async render(targetPath: string, options: RenderOptions) {
         const fullPath = path.resolve(process.cwd(), targetPath);
-        const configJson = await getConfig(targetPath, {
-            render: { watch: options.watch },
-        });
+        const configJson = await getConfig(targetPath, { render: options });
+        const structurePath = path.resolve(process.cwd(), fullPath);
         const renderStructure = new RenderStructure(configJson);
-        // Run once
-        await renderStructure.render(targetPath, options);
+        const watching = new Watching(structurePath);
 
-        // If --watch option is provided
-        if (options.watch) {
-            console.log(` 🚀 Watching for changes in ${fullPath}...`);
-            const yamlFilePath = path.resolve(process.cwd(), fullPath);
-
-            // Use chokidar to detect changes
-            const watcher = chokidar.watch(yamlFilePath, {
-                persistent: true,
-                ignoreInitial: false,
-            });
-
-            watcher.on('change', async (filePath) => {
-                console.log(` 📝 File ${filePath} changed, re-rendering...`);
-                await renderStructure.render(targetPath, options);
-            });
-
-            // Handle watcher errors
-            watcher.on('error', (error) => console.error(' 🚨 Watcher error:', error));
-        }
+        watching.once(async () => await renderStructure.render(targetPath));
+        watching.runing(configJson.render?.watch);
     }
 
     static async lint(targetPath: string, options: { watch?: boolean }) {
         const fullPath = path.resolve(process.cwd(), targetPath);
-        const configJson = await getConfig(fullPath, {
-            lint: { watch: options.watch },
-        });
+        const configJson = await getConfig(fullPath, { lint: options });
 
         const lint = new Lint(configJson);
+        const watching = new Watching(fullPath);
 
-        if (configJson.lint?.watch) {
-            await lint.directory(fullPath);
+        watching.once(async () => await lint.directory(fullPath));
+        watching.onChange(async (filePath) => {
+            const ext = path.extname(filePath);
+            const isExcluded = configJson.exclude?.some((excludePath) =>
+                filePath.includes(excludePath),
+            );
 
-            console.log(chalk.blue.bold(`\n👀 Watching for changes in ${fullPath}\\...`));
-            const watcher = chokidar.watch(fullPath, {
-                persistent: true,
-                ignoreInitial: false,
-            });
+            if (lint.supportedExtensions.includes(ext) && !isExcluded) await lint.file(filePath);
+        });
 
-            watcher.on('change', async (filePath) => {
-                const ext = path.extname(filePath);
-
-                const isExcluded = configJson.exclude?.some((excludePath) =>
-                    filePath.includes(excludePath),
-                );
-
-                if (lint.supportedExtensions.includes(ext) && !isExcluded)
-                    await lint.file(filePath);
-            });
-
-            watcher.on('error', (error) => console.error(chalk.red(`❌ Watcher error: ${error}`)));
-        } else {
-            console.log(chalk.blue.bold(`🔍 Linting code in ${fullPath}\\...\n`));
-            await lint.directory(fullPath);
-            console.log(chalk.green.bold(`\n✅ Done linting code in ${fullPath}\\`));
-        }
+        watching.runing(configJson.lint?.watch);
     }
 
-    static async format(targetPath: string, options: { watch?: boolean }) {
+    static async format(targetPath: string, options: { watch?: boolean; log?: boolean }) {
         const fullPath = path.resolve(process.cwd(), targetPath);
         const configJson = await getConfig(fullPath, {
-            format: { watch: options.watch },
+            format: { watch: options.watch, log: options.log },
         });
 
         const format = new Format(configJson);
+        const watching = new Watching(fullPath);
 
-        if (configJson.format?.watch) {
-            await format.directory(fullPath);
+        watching.once(async () => await format.directory(fullPath));
+        watching.onChange(async (filePath) => {
+            const ext = path.extname(filePath);
+            const isExcluded = configJson.exclude?.some((excludePath) =>
+                filePath.includes(excludePath),
+            );
 
-            console.log(chalk.blue.bold(`👀 Watching for changes in ${fullPath}\\...`));
-            const watcher = chokidar.watch(fullPath, {
-                persistent: true,
-                ignoreInitial: false,
-            });
+            if (format.supportedExtensions.includes(ext) && !isExcluded) {
+                const code = await fs.readFile(filePath, 'utf8');
+                const formatted = await format.file(filePath, code);
 
-            watcher.on('change', async (filePath) => {
-                const ext = path.extname(filePath);
-
-                const isExcluded = configJson.exclude?.some((excludePath) =>
-                    filePath.includes(excludePath),
-                );
-
-                if (format.supportedExtensions.includes(ext) && !isExcluded) {
-                    const code = await fs.readFile(filePath, 'utf8');
-                    const formatted = await format.file(filePath, code);
-
-                    if (formatted !== code) {
-                        await fs.writeFile(filePath, formatted, 'utf8');
-                        console.log(chalk.green(`✅ Formatted: ${filePath}`));
-                    }
+                if (formatted !== code) {
+                    await fs.writeFile(filePath, formatted, 'utf8');
+                    console.log(chalk.green(`✅ Formatted: ${filePath}`));
                 }
-            });
+            }
+        });
 
-            watcher.on('error', (error) => console.error(chalk.red(`❌ Watcher error: ${error}`)));
-        } else {
-            console.log(chalk.blue.bold(`🔨 Formatting code in ${fullPath}\\...`));
-            await format.directory(fullPath);
-            console.log(chalk.green.bold(`✅ Done formatting code in ${fullPath}\\`));
-        }
+        watching.runing(configJson.format?.watch);
     }
 
     static async check(targetPath: string, options: { watch?: boolean }) {
         const fullPath = path.resolve(process.cwd(), targetPath);
-        const configJson = await getConfig(fullPath, {
-            format: { watch: options.watch },
-            lint: { watch: options.watch },
+        const configJson = await getConfig(fullPath);
+
+        const check = new Check(configJson);
+        const watching = new Watching(fullPath);
+
+        watching.once(async () => await check.directory(fullPath));
+        watching.onChange(async (filePath) => {
+            const isExcluded = configJson.exclude?.some((excludePath) =>
+                filePath.includes(excludePath),
+            );
+
+            if (!isExcluded) await check.file(filePath);
         });
 
-        const { default: Check } = await import('./check/Check');
-        const check = new Check(configJson);
-
-        if (configJson.format?.watch || configJson.lint?.watch) {
-            await check.directory(fullPath);
-
-            console.log(chalk.blue.bold(`\n👀 Watching for changes in ${fullPath}\\...`));
-            const watcher = chokidar.watch(fullPath, {
-                persistent: true,
-                ignoreInitial: false,
-            });
-
-            watcher.on('change', async (filePath) => {
-                const isExcluded = configJson.exclude?.some((excludePath) =>
-                    filePath.includes(excludePath),
-                );
-
-                if (!isExcluded) await check.file(filePath);
-            });
-
-            watcher.on('error', (error) => console.error(chalk.red(`❌ Watcher error: ${error}`)));
-        } else {
-            console.log(chalk.blue.bold(`🔍 Checking code in ${fullPath}\\...\n`));
-            await check.directory(fullPath);
-            console.log(chalk.green.bold(`\n✅ Done checking code in ${fullPath}\\`));
-        }
+        watching.runing(options.watch);
     }
 }

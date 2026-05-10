@@ -11,6 +11,17 @@
             "tabWidth": 4,
             "trailingComma": "all",
             "printWidth": 80
+        },
+        "importSort": {
+            "enabled": true,
+            "strategy": "length",
+            "patterns": [
+                {
+                    "extensions": [".ts", ".tsx", ".js", ".jsx"],
+                    "match": "^import\\s+.*?\\s+from\\s+['\"]([^'\"]+)['\"];?$|^import\\s+['\"]([^'\"]+)['\"];?$",
+                    "extract": "['\"]([^'\"]+)['\"]"
+                }
+            ]
         }
     },
     "lint": {
@@ -39,8 +50,8 @@
     "render": {
         "watch": false,
         "force": true,
-        "basePath": "./",
-        "structurePath": "./teachoco-dev.yaml"
+        "basePath": "./projects",
+        "structurePath": "./teachoco-dev.json"
     },
     "make": {
         "watch": false,

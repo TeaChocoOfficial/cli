@@ -2,10 +2,10 @@
 import chalk from 'chalk';
 import path from 'node:path';
 import { Ary } from '../../../class/ary';
-import { TccConfigJson } from '../../types/config/config';
 import { CommentExtension } from '../../types/check/commentExt';
+import ActionConfig from '../config/ActionConfig';
 
-export default class FormatComment {
+export default class FormatComment extends ActionConfig {
     private commentExtensions: CommentExtension[] = [
         // === SINGLE LINE: // ===
         {
@@ -241,8 +241,6 @@ export default class FormatComment {
         '^-\\*-', // Emacs mode line
     ];
 
-    constructor(private tccConfig: TccConfigJson) {}
-
     /**
      * @description add or update path comment in code
      * @param filePath - file path
@@ -250,28 +248,40 @@ export default class FormatComment {
      * @returns formatted code
      */
     comment(filePath: string, code: string): string {
-        const commentConfig = this.getCommentConfig(filePath);
-        if (!commentConfig) return code;
+        const commentConfig = this.tccConfig.format?.commentPath;
+        if (commentConfig?.enable === false) return code;
 
-        const { commentExt, newComment } = commentConfig;
+        const commentData = this.getCommentData(filePath);
+        if (!commentData) return code;
+
+        const { commentExt, newComment } = commentData;
         const lines = code.split('\n');
-
         const insertIndex = this.findInsertPosition(lines);
         const pathCommentIndex = this.findExistingPathComment(lines, commentExt, insertIndex);
 
-        const isUpdate = lines[pathCommentIndex] !== newComment;
+        if (commentConfig?.enable === 'clear') {
+            if (pathCommentIndex !== -1) {
+                this.logClearAction(filePath, pathCommentIndex);
+                lines.splice(pathCommentIndex, 1);
 
+                if (lines[pathCommentIndex]?.trim() === '') lines.splice(pathCommentIndex, 1);
+            }
+
+            return lines.join('\n');
+        }
+
+        const isUpdate = lines[pathCommentIndex] !== newComment;
         this.logCommentAction(filePath, pathCommentIndex, insertIndex, isUpdate);
 
         return this.applyComment(lines, newComment, pathCommentIndex, insertIndex);
     }
 
     /**
-     * @description get comment config
+     * @description get comment data
      * @param filePath - file path
-     * @returns comment config
+     * @returns comment data
      */
-    private getCommentConfig(filePath: string): {
+    private getCommentData(filePath: string): {
         commentExt: CommentExtension;
         newComment: string;
         relativePath: string;
@@ -453,5 +463,19 @@ export default class FormatComment {
                 console.log(chalk.green('  → Adding comment at line 1'));
             }
         }
+    }
+
+    /**
+     * @description log clear action
+     * @param filePath - file path
+     * @param pathCommentIndex - path comment index
+     */
+    private logClearAction(filePath: string, pathCommentIndex: number): void {
+        const relativePath = this.tccConfig.format?.commentPath?.isRelativePath
+            ? filePath
+            : path.relative(process.cwd(), filePath);
+        console.log(
+            chalk.yellow(`  → Clearing comment at "${relativePath}" line ${pathCommentIndex + 1}`),
+        );
     }
 }

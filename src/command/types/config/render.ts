@@ -14,6 +14,14 @@ export interface RenderConfig {
     force?: boolean;
 
     /**
+     * @description Render specific workspace by name
+     * @default undefined
+     * @example "my-workspace"
+     * @example "my-workspace-1,my-workspace-2,my-workspace-3"
+     */
+    name?: string;
+
+    /**
      * @description Base path for rendering
      */
     basePath?: string;

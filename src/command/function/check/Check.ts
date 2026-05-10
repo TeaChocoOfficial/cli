@@ -4,11 +4,9 @@ import Lint from './Lint';
 import chalk from 'chalk';
 import path from 'node:path';
 import Format from './Format';
-import { TccConfigJson } from '../../types/config/config';
+import ActionConfig from '../config/ActionConfig';
 
-export default class Check {
-    constructor(private tccConfig: TccConfigJson) {}
-
+export default class Check extends ActionConfig {
     async directory(dirPath: string): Promise<void> {
         const files = await fs.readdir(dirPath);
         const exclude = this.tccConfig.exclude ?? [];

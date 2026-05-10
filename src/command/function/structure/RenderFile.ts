@@ -14,22 +14,25 @@ export default class RenderFile {
     async render(node?: FileNode, basePath?: string) {
         const fileNode = node ?? this.node;
         const currentPath = basePath ? path.join(basePath, fileNode.name) : this.currentPath;
-        console.log(chalk.gray(`\n📁 Render ${currentPath}`));
-        if (fileNode.type === 'folder') {
-            await this.createFolder(currentPath, fileNode);
-        } else {
-            await this.createFile(fileNode, basePath ?? this.currentPath);
-        }
+        console.log(chalk.cyan(`\n📁 Render ${currentPath}`));
+        if (fileNode.type === 'folder') await this.createFolder(currentPath, fileNode);
+        else
+            try {
+                const parentPath = basePath ?? path.dirname(this.currentPath);
+                await this.createFile(fileNode, parentPath);
+            } catch (error) {
+                console.error(chalk.red(`❌ Failed to create file ${currentPath}: ${error}`));
+            }
     }
 
     async createFolder(currentPath: string, node: FileNode) {
         const exists = await fs.pathExists(currentPath);
-        if (exists && !this.force) {
-            console.log(chalk.gray(`📁 Skip folder ${currentPath} (already exists)`));
-        } else {
+
+        if (!exists) {
             console.log(chalk.yellow(`📁 Create folder ${currentPath}`));
             await fs.ensureDir(currentPath);
         }
+
         if (node.children) {
             for (const child of node.children) {
                 await this.render(child, currentPath);
@@ -39,34 +42,19 @@ export default class RenderFile {
 
     async createFile(child: FileNode, currentPath: string) {
         const filePath = path.join(currentPath, child.name);
-        let content = '';
-        let ext = child.type;
 
-        if (child.code && child.code.length > 0) {
-            content = child.code.join('\n');
-        }
+        const content = child.code?.join('\n') ?? '';
 
-        const supportedTypes = ['folder', 'ts', 'tsx', 'png'];
-        if (!supportedTypes.includes(child.type)) {
-            throw new Error(`Unsupported file type: ${child.type}`);
-        }
-
-        switch (child.type) {
-            case 'ts':
-            case 'tsx':
-                ext = `.${child.type}`;
-                break;
-            case 'png':
-                ext = `.${child.type}`;
-                content = child.code?.[0] || '';
-                break;
-        }
-
-        const fileFullPath = `${filePath}${ext}`;
+        const fileFullPath = `${filePath}.${child.type}`;
         const exists = await fs.pathExists(fileFullPath);
-        if (exists && !this.force) {
-            console.log(chalk.redBright(`📄 Skip file ${fileFullPath} (already exists)`));
-            console.log(chalk.gray(`   Tip: Use -f or --force to overwrite`));
+
+        if (exists) {
+            const existing = await fs.readFile(fileFullPath, 'utf8');
+
+            if (existing !== content) {
+                await fs.writeFile(fileFullPath, content);
+                console.log(chalk.hex('#ffaa00')(`📄 Update file ${fileFullPath}`));
+            } else console.log(chalk.gray(`📄 Skip file ${fileFullPath} (no changes)`));
         } else {
             await fs.writeFile(fileFullPath, content);
             console.log(chalk.cyan(`📄 Create file ${fileFullPath}`));

@@ -3,36 +3,38 @@ import fs from 'fs-extra';
 import chalk from 'chalk';
 import yaml from 'js-yaml';
 import path from 'node:path';
+import StructureData from './StructureData';
+import ActionConfig from '../config/ActionConfig';
 import { FileNode } from '../../types/structure/file';
 import { TccConfigJson } from '../../types/config/config';
-import { StructureData, WorkSpace } from '../../types/structure/structure';
+import { StructureDataJson, WorkSpace } from '../../types/structure/structure';
 
-export default class MakeStructure {
-    constructor(private tccConfig: TccConfigJson) {}
+export default class MakeStructure extends ActionConfig {
+    private structureData: StructureData;
+
+    constructor(tccConfig: TccConfigJson) {
+        super(tccConfig);
+        this.structureData = new StructureData(tccConfig);
+    }
 
     getFileContent(filePath: string): string[] {
         try {
-            const content = fs.readFileSync(filePath, 'utf8');
-            return content.split('\n');
+            const stat = fs.statSync(filePath);
+            if (stat.size > 1024 * 1024) return [];
+
+            const buffer = fs.readFileSync(filePath);
+            if (buffer.includes(0)) return [];
+
+            return buffer.toString('utf8').split('\n');
         } catch {
             return [];
         }
     }
 
-    async make(targetPath: string) {
+    async make(targetPath: string): Promise<void> {
+        const { make } = this.tccConfig;
         try {
-            const { make } = this.tccConfig;
-            const output = make?.output;
-            const isJson = output?.endsWith('.json');
-            if (!output || (!output.endsWith('.yml') && !output.endsWith('.yaml') && !isJson))
-                throw new Error(
-                    `Output file must have .yaml, .yml, or .json extension\nOutput: ${output}`,
-                );
-
-            console.log(chalk.green(`🔍 Scanning directory: ${targetPath}`));
-
             const src = await this.scanDirectory(targetPath);
-
             const workspace: WorkSpace = {
                 name: make?.name ?? 'My Project',
                 run: make?.run ?? 'echo "Starting Project"',
@@ -40,20 +42,34 @@ export default class MakeStructure {
                 src,
             };
 
-            const structureData: StructureData = {
+            const getStructurePath = this.structureData.getPath(
+                targetPath,
+                make?.basePath,
+                make?.output,
+            );
+
+            console.log(chalk.green(`🔍 Scanning directory: ${getStructurePath}`));
+            const data = await this.structureData.getData(getStructurePath);
+            const isJson = getStructurePath?.endsWith('.json');
+
+            if (data && !this.tccConfig.make?.force)
+                return console.log(
+                    chalk.yellow('\nStructure file already exists. Use --force to overwrite.'),
+                );
+
+            const structureData: StructureDataJson = {
                 $schema:
                     'https://raw.githubusercontent.com/TeaChocoOfficial/cli/main/structure.schema.json',
-                workspaces: [workspace],
+                workspaces: data ? [...data.workspaces, workspace] : [workspace],
             };
 
-            const outputPath = path.join(targetPath, make?.basePath ?? '.', output);
             let content: string;
-            if (isJson) content = JSON.stringify(structureData, null, 4);
-            else content = yaml.dump(structureData, { indent: 4 });
+            if (isJson) content = JSON.stringify(structureData);
+            else content = yaml.dump(structureData);
 
-            await fs.writeFile(outputPath, content);
+            await fs.writeFile(getStructurePath, content);
 
-            console.log(chalk.green(`\n✅ Successfully generated ${output}`));
+            console.log(chalk.green(`\n✅ Successfully generated ${getStructurePath}`));
             console.log(chalk.gray(`   Workspace name: ${workspace.name}`));
             console.log(chalk.gray(`   Files scanned: ${src.length}`));
         } catch (error) {
@@ -84,16 +100,11 @@ export default class MakeStructure {
                 });
             } else if (entry.isFile()) {
                 const ext = path.extname(entry.name).slice(1);
-                if (['ts', 'tsx', 'png', 'jpg', 'jpeg', 'svg'].includes(ext)) {
-                    nodes.push({
-                        name: path.parse(entry.name).name,
-                        type: ext,
-                        code:
-                            ext !== 'png' && ext !== 'jpg' && ext !== 'jpeg' && ext !== 'svg'
-                                ? this.getFileContent(fullPath)
-                                : [],
-                    });
-                }
+                nodes.push({
+                    name: path.parse(entry.name).name,
+                    type: ext,
+                    code: this.getFileContent(fullPath),
+                });
             }
         }
 

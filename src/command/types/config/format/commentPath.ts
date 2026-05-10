@@ -1,12 +1,13 @@
 // -Path: "cli/src/command/types/config/commentPath.ts"
-import { CommentExtension } from '../check/commentExt';
+import { CommentExtension } from '../../check/commentExt';
 
 export interface CommentPathConfig {
     /**
-     * @description Clear all existing comment paths before adding new ones
-     * @default false
+     * @description Enable comment path (true, false, or 'clear' to clear existing paths)
+     * @default true
+     * @param {boolean | 'clear'} boolean | 'clear' - enable comment path
      */
-    clear?: boolean;
+    enable?: boolean | 'clear';
 
     /**
      * @description Comment path in file

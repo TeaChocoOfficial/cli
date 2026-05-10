@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import path from 'node:path';
 import { ESLint, Linter } from 'eslint';
 import { Ary } from '../../../class/ary';
-import { TccConfigJson } from '../../types/config/config';
+import ActionConfig from '../config/ActionConfig';
 
 interface RawConfig extends Omit<Linter.Config, 'plugins' | 'processor'> {
     languageOptions?: Linter.LanguageOptions & { parser?: string | Linter.Parser };
@@ -12,7 +12,7 @@ interface RawConfig extends Omit<Linter.Config, 'plugins' | 'processor'> {
     processor?: string | Linter.Processor;
 }
 
-export default class Lint {
+export default class Lint extends ActionConfig {
     supportedExtensions = ['.ts', '.tsx', '.js', '.jsx'];
     private configFiles = [
         'eslint.config.js',
@@ -28,9 +28,8 @@ export default class Lint {
         '.eslintrc',
     ];
 
-    constructor(private tccConfig: TccConfigJson) {}
-
     async directory(dirPath: string): Promise<void> {
+        console.log(chalk.blue.bold(`🔍 Linting code in ${dirPath}\\...\n`));
         const lintConfig = this.tccConfig.lint;
         const hasInlineConfig = !!lintConfig?.overrideConfig;
         const hasExternalConfig = await this.hasConfig(dirPath);
