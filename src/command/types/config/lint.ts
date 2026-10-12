@@ -18,12 +18,6 @@ export interface LintConfig {
     fix?: boolean;
 
     /**
-     * @description File extensions to lint
-     * @default ['ts', 'tsx', 'js', 'jsx']
-     */
-    extensions?: string[];
-
-    /**
      * @description Override ESLint configuration
      * @default undefined
      */

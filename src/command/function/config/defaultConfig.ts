@@ -3,6 +3,10 @@ import { TccConfigJson } from '../../types/config/config';
 
 const defaultConfig: TccConfigJson = {
     $schema: 'https://raw.githubusercontent.com/TeaChocoOfficial/cli/main/tcc.config.schema.json',
+    server: {
+        open: true,
+        host: '127.0.0.1',
+    },
     format: {
         commentPath: {
             enable: true,
@@ -11,7 +15,7 @@ const defaultConfig: TccConfigJson = {
         },
         prettier: {
             semicolon: true,
-            singleQuote: false,
+            singleQuote: true,
             tabWidth: 4,
             trailingComma: 'all',
             printWidth: 80,
@@ -22,13 +26,13 @@ const defaultConfig: TccConfigJson = {
             patterns: [
                 {
                     extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs'],
-                    match: "^import\\s+.*?\\s+from\\s+['\"]([^'\"]+)['\"];?$|^import\\s+['\"]([^'\"]+)['\"];?$",
-                    extract: "['\"]([^'\"]+)['\"]",
+                    match: '^import\\s+.*?\\s+from\\s+[\'"]([^\'"]+)[\'"];?$|^import\\s+[\'"]([^\'"]+)[\'"];?$',
+                    extract: '[\'"]([^\'"]+)[\'"]',
                 },
                 {
                     extensions: ['.py'],
-                    match: "^(?:from\\s+([\\w.]+)\\s+import|import\\s+([\\w.]+))",
-                    extract: "(?:from\\s+([\\w.]+)|import\\s+([\\w.]+))",
+                    match: '^(?:from\\s+([\\w.]+)\\s+import|import\\s+([\\w.]+))',
+                    extract: '(?:from\\s+([\\w.]+)|import\\s+([\\w.]+))',
                 },
             ],
         },
@@ -55,20 +59,6 @@ const defaultConfig: TccConfigJson = {
                 },
             },
         ],
-    },
-    render: {
-        watch: false,
-        force: true,
-        basePath: './',
-        structurePath: './teachoco-dev.yaml',
-    },
-    make: {
-        watch: false,
-        force: true,
-        basePath: './',
-        output: './teachoco-dev.yaml',
-        name: 'My Project',
-        run: 'echo "Starting Project"',
     },
     exclude: ['node_modules', 'build', 'dist', '.git'],
 };

@@ -1,0 +1,237 @@
+/* -Path: 'ui\src\index.css'*/
+@import 'tailwindcss';
+
+/* Dark Mode Variant */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ===== TeaChoco DevSpace — Design Token System ===== */
+@theme {
+    /* --- Primary: Cornflower Blue (#5994FF) --- */
+    --color-primary: oklch(0.62 0.17 265);
+    --color-primary-foreground: oklch(0.98 0 0);
+    --color-primary-subtle: oklch(0.94 0.04 265);
+    --color-primary-muted: oklch(0.84 0.1 265);
+    --color-primary-emphasis: oklch(0.5 0.2 265);
+
+    /* --- Secondary: Light Pink (#E59CFF) --- */
+    --color-secondary: oklch(0.68 0.16 310);
+    --color-secondary-foreground: oklch(0.98 0 0);
+    --color-secondary-subtle: oklch(0.94 0.04 310);
+    --color-secondary-muted: oklch(0.85 0.1 310);
+    --color-secondary-emphasis: oklch(0.56 0.19 310);
+
+    /* --- Surface: Cool Gray (ไม่แย่งความเด่นจากสีหลัก) --- */
+    --color-surface: oklch(0.97 0.005 260);
+    --color-surface-foreground: oklch(0.15 0.01 260);
+    --color-surface-elevated: oklch(1 0 0);
+    --color-surface-overlay: oklch(0.93 0.005 260);
+    --color-surface-sunken: oklch(0.9 0.008 260);
+
+    /* --- Feedback: Error --- */
+    --color-error: oklch(0.55 0.22 25);
+    --color-error-foreground: oklch(0.99 0 0);
+    --color-error-subtle: oklch(0.96 0.02 25);
+    --color-error-muted: oklch(0.88 0.08 25);
+    --color-error-emphasis: oklch(0.45 0.24 25);
+
+    /* --- Feedback: Warning --- */
+    --color-warning: oklch(0.7 0.16 85);
+    --color-warning-foreground: oklch(0.15 0.02 85);
+    --color-warning-subtle: oklch(0.97 0.04 85);
+    --color-warning-muted: oklch(0.9 0.1 85);
+    --color-warning-emphasis: oklch(0.6 0.18 85);
+
+    /* --- Feedback: Success --- */
+    --color-success: oklch(0.58 0.16 142);
+    --color-success-foreground: oklch(0.99 0 0);
+    --color-success-subtle: oklch(0.96 0.02 142);
+    --color-success-muted: oklch(0.88 0.08 142);
+    --color-success-emphasis: oklch(0.48 0.18 142);
+
+    /* --- Feedback: Info --- */
+    --color-info: oklch(0.62 0.14 240);
+    --color-info-foreground: oklch(0.99 0 0);
+    --color-info-subtle: oklch(0.96 0.02 240);
+    --color-info-muted: oklch(0.88 0.06 240);
+    --color-info-emphasis: oklch(0.52 0.16 240);
+
+    /* --- Neutral / Muted --- */
+    --color-neutral: oklch(0.45 0.01 260);
+    --color-neutral-foreground: oklch(0.98 0 0);
+    --color-neutral-subtle: oklch(0.96 0.005 260);
+    --color-neutral-muted: oklch(0.85 0.01 260);
+    --color-neutral-emphasis: oklch(0.35 0.02 260);
+
+    /* --- Border / Divider --- */
+    --color-border: oklch(0.88 0.01 260);
+    --color-border-strong: oklch(0.76 0.02 260);
+    --color-border-hover: oklch(0.62 0.17 265);
+    --color-ring: oklch(0.62 0.17 265);
+
+    /* --- Typography --- */
+    --font-sans: 'Inter', ui-sans-serif, system-ui;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+    /* --- Radius --- */
+    --radius-none: 0;
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --radius-full: 9999px;
+}
+
+/* ===== DARK MODE OVERRIDES ===== */
+.dark {
+    /* Surface */
+    --color-surface: oklch(0.14 0.01 260);
+    --color-surface-foreground: oklch(0.93 0.005 260);
+    --color-surface-elevated: oklch(0.18 0.01 260);
+    --color-surface-overlay: oklch(0.22 0.012 260);
+    --color-surface-sunken: oklch(0.1 0.008 260);
+
+    /* Primary */
+    --color-primary: oklch(0.7 0.15 265);
+    --color-primary-foreground: oklch(0.12 0.02 260);
+    --color-primary-subtle: oklch(0.22 0.05 265);
+    --color-primary-muted: oklch(0.38 0.12 265);
+    --color-primary-emphasis: oklch(0.8 0.12 265);
+
+    /* Secondary */
+    --color-secondary: oklch(0.74 0.14 310);
+    --color-secondary-foreground: oklch(0.12 0.02 310);
+    --color-secondary-subtle: oklch(0.22 0.05 310);
+    --color-secondary-muted: oklch(0.38 0.12 310);
+    --color-secondary-emphasis: oklch(0.84 0.12 310);
+
+    /* Error */
+    --color-error: oklch(0.62 0.22 25);
+    --color-error-subtle: oklch(0.22 0.04 25);
+    --color-error-muted: oklch(0.38 0.12 25);
+
+    /* Warning */
+    --color-warning: oklch(0.74 0.14 85);
+    --color-warning-foreground: oklch(0.12 0.02 85);
+    --color-warning-subtle: oklch(0.2 0.03 85);
+    --color-warning-muted: oklch(0.38 0.08 85);
+
+    /* Success */
+    --color-success: oklch(0.65 0.18 142);
+    --color-success-subtle: oklch(0.2 0.04 142);
+    --color-success-muted: oklch(0.38 0.12 142);
+
+    /* Info */
+    --color-info: oklch(0.68 0.12 240);
+    --color-info-subtle: oklch(0.2 0.04 240);
+    --color-info-muted: oklch(0.38 0.08 240);
+
+    /* Neutral */
+    --color-neutral: oklch(0.65 0.01 260);
+    --color-neutral-foreground: oklch(0.15 0.01 260);
+    --color-neutral-subtle: oklch(0.25 0.01 260);
+    --color-neutral-muted: oklch(0.42 0.015 260);
+    --color-neutral-emphasis: oklch(0.75 0.01 260);
+
+    /* Border */
+    --color-border: oklch(0.28 0.01 260);
+    --color-border-strong: oklch(0.38 0.015 260);
+    --color-border-hover: oklch(0.7 0.15 265);
+    --color-ring: oklch(0.7 0.15 265);
+}
+
+@layer base {
+    :root {
+        color-scheme: light;
+    }
+    .dark {
+        color-scheme: dark;
+    }
+
+    *,
+    *::before,
+    *::after {
+        transition:
+            fill 200ms ease,
+            color 200ms ease,
+            stroke 200ms ease,
+            box-shadow 200ms ease,
+            border-color 200ms ease,
+            outline-color 200ms ease,
+            background-color 200ms ease;
+    }
+
+    html,
+    body,
+    #root {
+        @apply min-h-dvh w-full text-surface-foreground;
+    }
+
+    html {
+        @apply bg-surface scroll-smooth;
+    }
+
+    body {
+        @apply overflow-x-hidden leading-[1.6] font-sans;
+    }
+
+    #root {
+        @apply flex flex-col;
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+        @apply w-2 h-2;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-border rounded-md;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-surface-overlay;
+    }
+
+    .codex-editor {
+        @apply h-full;
+    }
+}
+
+/* Animations */
+@keyframes animate-in {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-in {
+    animation: animate-in 0.2s ease-out;
+}
+
+@layer components {
+    /* ===== Buttons ===== */
+    .btn {
+        @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium no-underline transition-all duration-200 cursor-pointer border-none text-base;
+    }
+
+    .btn-primary {
+        @apply bg-linear-to-r from-primary to-secondary text-white shadow-lg shadow-primary/40 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/50;
+    }
+
+    .btn-secondary {
+        @apply bg-transparent border border-border text-secondary hover:bg-secondary hover:text-primary hover:border-secondary;
+    }
+
+    /* ===== Cards ===== */
+    .card {
+        @apply bg-surface border border-border rounded-2xl p-6 transition-all duration-200 hover:bg-surface-elevated hover:border-secondary hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/30;
+    }
+}

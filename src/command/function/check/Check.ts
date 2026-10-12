@@ -8,29 +8,41 @@ import ActionConfig from '../config/ActionConfig';
 
 export default class Check extends ActionConfig {
     async directory(dirPath: string): Promise<void> {
-        const files = await fs.readdir(dirPath);
+        let files: string[];
+
+        try {
+            files = await fs.readdir(dirPath);
+        } catch (error) {
+            console.error(chalk.red(`❌ Failed to read directory ${dirPath}`));
+            console.error(
+                chalk.red(`   Reason: ${error instanceof Error ? error.message : String(error)}`),
+            );
+            return;
+        }
+
         const exclude = this.tccConfig.exclude ?? [];
-        const lintConfig = this.tccConfig.lint;
-        const lintExtensions =
-            lintConfig?.extensions ?? new Lint(this.tccConfig).supportedExtensions;
-        const formatExtensions = new Format(this.tccConfig).supportedExtensions;
-        const extensions = [...new Set([...lintExtensions, ...formatExtensions])];
 
         for (const file of files) {
             const filePath = path.join(dirPath, file);
-            const stat = await fs.stat(filePath);
+            let stat: fs.Stats;
+
+            try {
+                stat = await fs.stat(filePath);
+            } catch (error) {
+                console.error(chalk.red(`❌ Failed to open file ${filePath}`));
+                console.error(
+                    chalk.red(
+                        `   Reason: ${error instanceof Error ? error.message : String(error)}`,
+                    ),
+                );
+                continue;
+            }
 
             if (stat.isDirectory()) await this.directory(filePath);
             else if (stat.isFile()) {
-                const ext = path.extname(file);
+                const isExcluded = exclude.some((excludePath) => filePath.includes(excludePath));
 
-                if (extensions.includes(ext)) {
-                    const isExcluded = exclude.some((excludePath) =>
-                        filePath.includes(excludePath),
-                    );
-
-                    if (!isExcluded) await this.file(filePath);
-                }
+                if (!isExcluded) await this.file(filePath);
             }
         }
     }
@@ -38,24 +50,19 @@ export default class Check extends ActionConfig {
     async file(filePath: string): Promise<void> {
         const format = new Format(this.tccConfig);
         const lint = new Lint(this.tccConfig);
-        const ext = path.extname(filePath);
-        const isFormatSupported = format.supportedExtensions.includes(ext);
-        const isLintSupported = lint.supportedExtensions.includes(ext);
 
-        if (isFormatSupported) {
-            try {
-                const code = await fs.readFile(filePath, 'utf8');
-                const formatted = await format.file(filePath, code);
+        try {
+            const code = await fs.readFile(filePath, 'utf8');
+            const formatted = await format.file(filePath, code);
 
-                if (formatted !== code) {
-                    await fs.writeFile(filePath, formatted, 'utf8');
-                    console.log(chalk.green(`   ✅ Formatted`));
-                }
-            } catch (error) {
-                console.error(chalk.red(`   ❌ Format failed: ${error}`));
+            if (formatted !== code) {
+                await fs.writeFile(filePath, formatted, 'utf8');
+                console.log(chalk.green(`   ✅ Formatted`));
             }
+        } catch (error) {
+            console.error(chalk.red(`   ❌ Format failed: ${error}`));
         }
 
-        if (isLintSupported) await lint.file(filePath);
+        await lint.file(filePath);
     }
 }

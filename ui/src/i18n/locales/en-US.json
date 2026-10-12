@@ -1,0 +1,14 @@
+{
+    "title": "TeaChoco DevSpace",
+    "nav": {
+        "home": "Home",
+        "workspace": "Workspace",
+        "setting": "Setting"
+    },
+    "setting": {
+        "title": "Settings"
+    },
+    "footer": {
+        "copyright": "© 2026 TeaChoco DevSpace. All rights reserved."
+    }
+}

@@ -2,21 +2,35 @@
 import fs from 'fs-extra';
 import chalk from 'chalk';
 import path from 'node:path';
+import Dev from './server/Dev';
 import Lint from './check/Lint';
 import Check from './check/Check';
 import Watching from './Watching';
 import Format from './check/Format';
-import { MakeOptions } from '../make';
-import { RenderOptions } from '../render';
 import getConfig from './config/getConfig';
+import readline from 'node:readline/promises';
 import defaultConfig from './config/defaultConfig';
 import findConfigJson from './config/findConfigJson';
-import MakeStructure from './structure/MakeStructure';
-import RenderStructure from './structure/RenderStructure';
 
 export default class Actions {
     static async init(targetPath?: string, options: { force?: boolean } = {}) {
         const configPath = path.resolve(process.cwd(), targetPath ?? '.', 'tcc.config.json');
+        const dirPath = path.dirname(configPath);
+
+        if (!(await fs.pathExists(dirPath))) {
+            const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+            const answer = await rl.question(
+                chalk.yellow(`⚠ Directory ${dirPath} does not exist. Create it? (y/n) `),
+            );
+            rl.close();
+
+            if (!['y', 'yes'].includes(answer.trim().toLowerCase())) {
+                console.log(chalk.gray('Cancelled.'));
+                return;
+            }
+
+            await fs.ensureDir(dirPath);
+        }
 
         if (await fs.pathExists(configPath)) {
             console.log(chalk.yellow(`⚠ tcc.config.json already exists at ${configPath}`));
@@ -24,8 +38,15 @@ export default class Actions {
             console.log(chalk.yellow('Overwriting existing config file...'));
         }
 
-        await fs.writeJson(configPath, defaultConfig, { spaces: 4 });
-        console.log(chalk.green(`✅ Created tcc.config.json at ${configPath}`));
+        try {
+            await fs.writeJson(configPath, defaultConfig, { spaces: 4 });
+            console.log(chalk.green(`✅ Created tcc.config.json at ${configPath}`));
+        } catch (error) {
+            console.error(chalk.red(`❌ Failed to create tcc.config.json at ${configPath}`));
+            console.error(
+                chalk.red(`   Reason: ${error instanceof Error ? error.message : String(error)}`),
+            );
+        }
     }
 
     static async find(targetPath?: string) {
@@ -35,25 +56,12 @@ export default class Actions {
         console.log(chalk.gray(JSON.stringify(configJson, null, 2)));
     }
 
-    static async make(targetPath: string, options: MakeOptions) {
+    static async dev(targetPath: string, options?: { port?: number; host?: string }) {
         const fullPath = path.resolve(process.cwd(), targetPath);
-        const configJson = await getConfig(targetPath, { make: options });
-        const makeStructure = new MakeStructure(configJson);
-        const watching = new Watching(fullPath);
+        const configJson = await getConfig(fullPath, { server: options });
 
-        watching.once(async () => await makeStructure.make(targetPath));
-        watching.runing(configJson.make?.watch);
-    }
-
-    static async render(targetPath: string, options: RenderOptions) {
-        const fullPath = path.resolve(process.cwd(), targetPath);
-        const configJson = await getConfig(targetPath, { render: options });
-        const structurePath = path.resolve(process.cwd(), fullPath);
-        const renderStructure = new RenderStructure(configJson);
-        const watching = new Watching(structurePath);
-
-        watching.once(async () => await renderStructure.render(targetPath));
-        watching.runing(configJson.render?.watch);
+        const dev = new Dev(configJson);
+        await dev.listen();
     }
 
     static async lint(targetPath: string, options: { watch?: boolean }) {
@@ -65,12 +73,11 @@ export default class Actions {
 
         watching.once(async () => await lint.directory(fullPath));
         watching.onChange(async (filePath) => {
-            const ext = path.extname(filePath);
             const isExcluded = configJson.exclude?.some((excludePath) =>
                 filePath.includes(excludePath),
             );
 
-            if (lint.supportedExtensions.includes(ext) && !isExcluded) await lint.file(filePath);
+            if (!isExcluded) await lint.file(filePath);
         });
 
         watching.runing(configJson.lint?.watch);
@@ -87,18 +94,26 @@ export default class Actions {
 
         watching.once(async () => await format.directory(fullPath));
         watching.onChange(async (filePath) => {
-            const ext = path.extname(filePath);
             const isExcluded = configJson.exclude?.some((excludePath) =>
                 filePath.includes(excludePath),
             );
 
-            if (format.supportedExtensions.includes(ext) && !isExcluded) {
-                const code = await fs.readFile(filePath, 'utf8');
-                const formatted = await format.file(filePath, code);
+            if (!isExcluded) {
+                try {
+                    const code = await fs.readFile(filePath, 'utf8');
+                    const formatted = await format.file(filePath, code);
 
-                if (formatted !== code) {
-                    await fs.writeFile(filePath, formatted, 'utf8');
-                    console.log(chalk.green(`✅ Formatted: ${filePath}`));
+                    if (formatted !== code) {
+                        await fs.writeFile(filePath, formatted, 'utf8');
+                        console.log(chalk.green(`✅ Formatted: ${filePath}`));
+                    }
+                } catch (error) {
+                    console.error(chalk.red(`❌ Failed to open file ${filePath}`));
+                    console.error(
+                        chalk.red(
+                            `   Reason: ${error instanceof Error ? error.message : String(error)}`,
+                        ),
+                    );
                 }
             }
         });

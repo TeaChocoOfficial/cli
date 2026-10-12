@@ -54,10 +54,7 @@ export default class FormatImport extends ActionConfig {
         },
     ];
 
-    constructor(
-        tccConfig: TccConfigJson,
-        filePath: string,
-    ) {
+    constructor(tccConfig: TccConfigJson, filePath: string) {
         super(tccConfig);
         this.ext = filePath.split('.').pop()?.toLowerCase() ?? '';
         if (this.ext) this.ext = '.' + this.ext;
@@ -72,7 +69,6 @@ export default class FormatImport extends ActionConfig {
 
         const block = this.extractImportBlock(code, pattern);
         if (block.imports.length === 0) return code;
-        console.log('block: ', block);
 
         const sorted = this.sortImports(block.imports);
         const sortedCode = sorted.map((node) => node.code).join('\n');
@@ -117,7 +113,8 @@ export default class FormatImport extends ActionConfig {
                 importBuffer.push(line);
             } else {
                 if (inImportBlock) {
-                    if (line.trim() === '') {
+                    const isContinuation = line.trim() === '' || /^\s/.test(line) || /^[},]/.test(line.trim());
+                    if (isContinuation) {
                         importBuffer.push(line);
                     } else {
                         inImportBlock = false;

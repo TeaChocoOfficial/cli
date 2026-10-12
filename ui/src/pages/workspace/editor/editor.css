@@ -1,0 +1,256 @@
+/* -Path: 'ui\src\pages\workspace\editor\editor.css'*/
+
+/* ธีมมืด (Dark Theme) */
+.editor-container {
+    --color-bg-main: #1e1e1e;
+    --color-bg-secondary: #252526;
+    --color-text-primary: #d4d4d4;
+    --color-text-secondary: #999;
+    --color-border: #333;
+    --color-active: #4ec9b0;
+    --color-selection: rgba(78, 201, 176, 0.2);
+
+    /* Editor.js variables */
+    --bg-light: #252526;
+    --text-main: #d4d4d4;
+    --text-secondary: #999;
+    --border-color: #333;
+    --toolbar-bg: #2d2d2d;
+    --plus-color: #999;
+
+    --popover-bg: #2d2d2d;
+    --popover-border: #555;
+    --popover-shadow: rgba(0, 0, 0, 0.5);
+    --popover-item-hover: #3a3a3a;
+    --popover-text: #d4d4d4;
+    --popover-search-bg: #1e1e1e;
+    --popover-search-border: #555;
+    --popover-search-text: #ccc;
+}
+
+/* ธีมสว่าง (Light Theme) */
+.editor-container.light {
+    --color-bg-main: #ffffff;
+    --color-bg-secondary: #f5f5f5;
+    --color-text-primary: #333;
+    --color-text-secondary: #666;
+    --color-border: #e0e0e0;
+    --color-active: #007acc;
+    --color-selection: rgba(0, 122, 204, 0.2);
+
+    --bg-light: #f5f5f5;
+    --text-main: #333;
+    --text-secondary: #666;
+    --border-color: #e0e0e0;
+    --toolbar-bg: #ffffff;
+    --plus-color: #666;
+
+    --popover-bg: #ffffff;
+    --popover-border: #e0e0e0;
+    --popover-shadow: rgba(0, 0, 0, 0.1);
+    --popover-item-hover: #f5f5f5;
+    --popover-text: #333;
+    --popover-search-bg: #f9f9f9;
+    --popover-search-border: #e0e0e0;
+    --popover-search-text: #333;
+}
+
+/* Override Editor.js elements */
+.codex-editor {
+    background-color: var(--color-bg-main) !important;
+    color: var(--color-text-primary) !important;
+}
+
+/* ✅ Override .ce-popover__container */
+.codex-editor .ce-popover__container {
+    background-color: var(--popover-bg) !important;
+    border: 1px solid var(--popover-border) !important;
+    box-shadow: 0 4px 12px var(--popover-shadow) !important;
+    border-radius: 8px !important;
+}
+
+/* ✅ ปรับแต่ง scrollbar ใน popover */
+.codex-editor .ce-popover__container::-webkit-scrollbar {
+    width: 4px;
+}
+
+.codex-editor .ce-popover__container::-webkit-scrollbar-thumb {
+    background-color: var(--popover-border);
+    border-radius: 2px;
+}
+
+.codex-editor .ce-popover__container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* ✅ Popover items */
+.codex-editor .ce-popover-item {
+    color: var(--popover-text) !important;
+    padding: 8px 12px !important;
+    border-radius: 4px !important;
+    margin: 2px 4px !important;
+    transition: background-color 0.2s ease;
+}
+
+.codex-editor .ce-popover-item:hover {
+    background-color: var(--popover-item-hover) !important;
+}
+
+.codex-editor .ce-popover-item--active {
+    background-color: var(--popover-item-hover) !important;
+    color: var(--color-active) !important;
+}
+
+/* ✅ Popover item icon */
+.codex-editor .ce-popover-item-icon {
+    color: var(--popover-text) !important;
+    margin-right: 8px !important;
+}
+
+/* ✅ Search field ใน popover */
+.codex-editor .ce-popover__search {
+    background-color: var(--popover-search-bg) !important;
+    border: 1px solid var(--popover-search-border) !important;
+    border-radius: 6px !important;
+    margin: 8px !important;
+    padding: 6px 10px !important;
+    color: var(--popover-search-text) !important;
+}
+
+.codex-editor .ce-popover__search::placeholder {
+    color: var(--popover-search-text) !important;
+    opacity: 0.6;
+}
+
+.codex-editor .ce-popover__search:focus {
+    outline: none !important;
+    border-color: var(--color-active) !important;
+}
+
+/* ✅ Popover header (ถ้ามี) */
+.codex-editor .ce-popover__header {
+    color: var(--popover-text) !important;
+    border-bottom: 1px solid var(--popover-border) !important;
+    padding: 8px 12px !important;
+}
+
+/* ✅ Popover separator/divider */
+.codex-editor .ce-popover__divider {
+    background-color: var(--popover-border) !important;
+    margin: 4px 12px !important;
+}
+
+/* ✅ Inline toolbar popover */
+.codex-editor .ce-inline-toolbar {
+    background-color: var(--popover-bg) !important;
+    border: 1px solid var(--popover-border) !important;
+    box-shadow: 0 4px 12px var(--popover-shadow) !important;
+    border-radius: 6px !important;
+}
+
+.codex-editor .ce-inline-toolbar .ce-inline-tool {
+    color: var(--popover-text) !important;
+    padding: 8px !important;
+}
+
+.codex-editor .ce-inline-toolbar .ce-inline-tool:hover {
+    background-color: var(--popover-item-hover) !important;
+}
+
+.codex-editor .ce-inline-toolbar .ce-inline-tool--active {
+    color: var(--color-active) !important;
+}
+
+/* ✅ Conversion toolbar */
+.codex-editor .ce-conversion-toolbar {
+    background-color: var(--popover-bg) !important;
+    border: 1px solid var(--popover-border) !important;
+    box-shadow: 0 4px 12px var(--popover-shadow) !important;
+}
+
+.codex-editor .ce-conversion-toolbar .ce-conversion-tool {
+    color: var(--popover-text) !important;
+}
+
+.codex-editor .ce-conversion-toolbar .ce-conversion-tool:hover {
+    background-color: var(--popover-item-hover) !important;
+}
+
+.codex-editor .ce-conversion-toolbar .ce-conversion-tool--active {
+    color: var(--color-active) !important;
+}
+
+.codex-editor .ce-toolbar__plus,
+.codex-editor .ce-toolbar__settings-btn {
+    color: var(--plus-color) !important;
+    background-color: var(--toolbar-bg) !important;
+}
+
+.codex-editor .ce-toolbar__plus:hover,
+.codex-editor .ce-toolbar__settings-btn:hover {
+    color: var(--color-active) !important;
+    background-color: var(--color-border) !important;
+}
+
+.codex-editor .ce-toolbar__actions {
+    background-color: var(--toolbar-bg) !important;
+    border-color: var(--color-border) !important;
+}
+
+.codex-editor .ce-toolbox {
+    background-color: var(--color-bg-secondary) !important;
+    border-color: var(--color-border) !important;
+}
+
+.codex-editor .ce-toolbox__button {
+    color: var(--color-text-primary) !important;
+}
+
+.codex-editor .ce-toolbox__button:hover {
+    background-color: var(--color-selection) !important;
+}
+
+.codex-editor .ce-block__content {
+    color: var(--color-text-primary) !important;
+}
+
+.codex-editor .ce-paragraph {
+    color: var(--color-text-primary) !important;
+}
+
+.codex-editor .ce-header {
+    color: var(--color-text-primary) !important;
+}
+
+/* Inline toolbar */
+.codex-editor .ce-inline-toolbar,
+.codex-editor .ce-conversion-toolbar {
+    background-color: var(--toolbar-bg) !important;
+    border-color: var(--color-border) !important;
+}
+
+.codex-editor .ce-inline-tool,
+.codex-editor .ce-conversion-tool {
+    color: var(--color-text-secondary) !important;
+}
+
+.codex-editor .ce-inline-tool:hover,
+.codex-editor .ce-conversion-tool:hover {
+    color: var(--color-text-primary) !important;
+    background-color: var(--color-selection) !important;
+}
+
+.codex-editor .ce-inline-tool--active,
+.codex-editor .ce-conversion-tool--active {
+    color: var(--color-active) !important;
+}
+
+/* Placeholder */
+.codex-editor .ce-paragraph[data-placeholder]:empty::before {
+    color: var(--color-text-secondary) !important;
+}
+
+/* Selection */
+.codex-editor .ce-block--selected .ce-block__content {
+    background-color: var(--color-selection) !important;
+}

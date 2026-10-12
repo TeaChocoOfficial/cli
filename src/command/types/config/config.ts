@@ -1,8 +1,7 @@
 // -Path: "cli/src/command/types/config.ts"
 import { LintConfig } from './lint';
-import { MakeConfig } from './make';
-import { RenderConfig } from './render';
 import { FormatConfig } from './format/format';
+import { ServerConfig } from './server/serverConfig';
 
 /**
  * @description Configuration for the tcc CLI tool
@@ -14,6 +13,11 @@ export interface TccConfigJson {
     $schema?: string;
 
     /**
+     * @description Configuration for the dev server
+     */
+    server?: ServerConfig;
+
+    /**
      * @description Configuration for formatting
      */
     format?: FormatConfig;
@@ -22,16 +26,6 @@ export interface TccConfigJson {
      * @description Configuration for linting
      */
     lint?: LintConfig;
-
-    /**
-     * @description Configuration for rendering
-     */
-    render?: RenderConfig;
-
-    /**
-     * @description Configuration for making
-     */
-    make?: MakeConfig;
 
     /**
      * @description Paths to exclude from processing

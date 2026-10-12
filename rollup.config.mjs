@@ -8,7 +8,6 @@ const externals = [
     'eslint',
     'prettier',
     'diff',
-    'chalk',
     'fs-extra',
     'commander',
     'chokidar',
@@ -16,6 +15,10 @@ const externals = [
     'dayjs',
     'yaml',
     'rollup',
+    'vite',
+    '@vitejs/plugin-react',
+    'tailwindcss',
+    /^@tailwindcss\//,
     /^node:/,
 ];
 

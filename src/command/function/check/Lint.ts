@@ -13,7 +13,6 @@ interface RawConfig extends Omit<Linter.Config, 'plugins' | 'processor'> {
 }
 
 export default class Lint extends ActionConfig {
-    supportedExtensions = ['.ts', '.tsx', '.js', '.jsx'];
     private configFiles = [
         'eslint.config.js',
         'eslint.config.mjs',
@@ -44,25 +43,41 @@ export default class Lint extends ActionConfig {
             return;
         }
 
-        const files = await fs.readdir(dirPath);
+        let files: string[];
+
+        try {
+            files = await fs.readdir(dirPath);
+        } catch (error) {
+            console.error(chalk.red(`❌ Failed to read directory ${dirPath}`));
+            console.error(
+                chalk.red(`   Reason: ${error instanceof Error ? error.message : String(error)}`),
+            );
+            return;
+        }
+
         const exclude = this.tccConfig.exclude ?? [];
-        const extensions = lintConfig?.extensions ?? this.supportedExtensions;
 
         for (const file of files) {
             const filePath = path.join(dirPath, file);
-            const stat = await fs.stat(filePath);
+            let stat: fs.Stats;
+
+            try {
+                stat = await fs.stat(filePath);
+            } catch (error) {
+                console.error(chalk.red(`❌ Failed to open file ${filePath}`));
+                console.error(
+                    chalk.red(
+                        `   Reason: ${error instanceof Error ? error.message : String(error)}`,
+                    ),
+                );
+                continue;
+            }
 
             if (stat.isDirectory()) await this.directory(filePath);
             else if (stat.isFile()) {
-                const ext = path.extname(file);
+                const isExcluded = exclude.some((excludePath) => filePath.includes(excludePath));
 
-                if (extensions.includes(ext)) {
-                    const isExcluded = exclude.some((excludePath) =>
-                        filePath.includes(excludePath),
-                    );
-
-                    if (!isExcluded) await this.file(filePath);
-                }
+                if (!isExcluded) await this.file(filePath);
             }
         }
     }
